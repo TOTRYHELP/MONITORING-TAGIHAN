@@ -313,6 +313,23 @@
     let rawBasedon = [];
     let filteredDatabase = [];
 
+    // Format Tanggal ke DD-MMM-YYYY (misal: 31-Jan-2030)
+    function formatDateCustom(val) {
+      if (!val) return '-';
+      let d;
+      if (typeof val === 'number') {
+        d = new Date((val - 25569) * 86400 * 1000);
+      } else {
+        d = new Date(val);
+      }
+      if (isNaN(d.getTime())) return String(val);
+      const months = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agt", "Sep", "Okt", "Nov", "Des"];
+      const day = String(d.getDate()).padStart(2, '0');
+      const month = months[d.getMonth()];
+      const year = d.getFullYear();
+      return `${day}-${month}-${year}`;
+    }
+
     // Synchronize Top & Bottom Scrollbars
     function setupDoubleScroll() {
       const topScroll = document.getElementById('topScrollContainer');
@@ -528,9 +545,9 @@
           <td class="py-3.5 px-4 font-bold text-emerald-600 whitespace-nowrap">${formatNumber(row.colJ)}</td>
           <td class="py-3.5 px-4 text-right font-bold text-amber-600 whitespace-nowrap">${formatNumber(row.colG)}</td>
           <td class="py-3.5 px-4 text-right font-bold text-pnm-red whitespace-nowrap">${formatNumber(row.colH)}</td>
-          <td class="py-3.5 px-4 text-slate-700 whitespace-nowrap font-medium">${row.colD || '-'}</td>
+          <td class="py-3.5 px-4 text-slate-700 whitespace-nowrap font-medium">${formatDateCustom(row.colD)}</td>
           <td class="py-3.5 px-4 text-slate-700 whitespace-nowrap font-medium">${row.colE || '-'}</td>
-          <td class="py-3.5 px-4 text-slate-700 whitespace-nowrap font-medium">${row.colF || '-'}</td>
+          <td class="py-3.5 px-4 text-slate-700 whitespace-nowrap font-medium">${formatDateCustom(row.colF)}</td>
           <td class="py-3.5 px-4 text-slate-700 whitespace-nowrap font-medium max-w-xs truncate">${row.colK || '-'}</td>
           <td class="py-3.5 px-4 text-slate-700 whitespace-nowrap font-medium">${row.colL || '-'}</td>
           <td class="py-3.5 px-4 text-slate-700 whitespace-nowrap font-medium">${row.colM || '-'}</td>
