@@ -10,7 +10,7 @@
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Google Fonts: Inter -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <script>
     tailwind.config = {
@@ -19,10 +19,12 @@
           colors: {
             pnm: {
               navy: '#002B66',
-              darknavy: '#001D47',
+              darknavy: '#00173B',
+              blueaccent: '#00529C',
               red: '#E31E24',
               redhover: '#C4161B',
-              gray: '#F8FAFC'
+              cyan: '#00A3E0',
+              gray: '#F1F5F9'
             }
           },
           fontFamily: {
@@ -34,39 +36,57 @@
   </script>
 
   <style>
+    /* Futuristic Gray Tech Background */
     body {
-      background-color: #F8FAFC;
+      background-color: #EBF0F6;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(0, 43, 102, 0.05) 0%, transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(227, 30, 36, 0.04) 0%, transparent 45%),
+        linear-gradient(to right, rgba(0, 43, 102, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 43, 102, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 28px 28px, 28px 28px;
       font-family: 'Inter', sans-serif;
     }
+
     .pnm-gradient {
       background: linear-gradient(135deg, #002B66 0%, #00173B 100%);
     }
+
     .card-shadow {
-      box-shadow: 0 4px 25px -4px rgba(0, 43, 102, 0.06), 0 2px 10px -2px rgba(0, 0, 0, 0.02);
+      box-shadow: 0 10px 30px -5px rgba(0, 43, 102, 0.07), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
     }
+
+    /* Custom Scrollbar Stylings */
     .custom-scrollbar::-webkit-scrollbar {
-      height: 6px;
-      width: 6px;
+      height: 8px;
+      width: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #E2E8F0;
+      border-radius: 4px;
     }
     .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: #CBD5E1;
+      background: #002B66;
       border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #E31E24;
     }
   </style>
 </head>
 <body class="text-slate-800 antialiased min-h-screen flex flex-col">
 
   <!-- BRANDING HEADER -->
-  <header class="pnm-gradient text-white border-b-4 border-pnm-red shadow-lg sticky top-0 z-50">
+  <header class="pnm-gradient text-white border-b-4 border-pnm-red shadow-xl sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
       <div class="flex items-center space-x-4">
-        <div class="bg-white p-2.5 rounded-xl shadow-md flex items-center justify-center w-12 h-12 border border-slate-100">
+        <div class="bg-white p-2.5 rounded-xl shadow-lg flex items-center justify-center w-12 h-12 border border-slate-100 ring-2 ring-pnm-cyan/20">
           <i class="fa-solid fa-building-columns text-pnm-navy text-2xl"></i>
         </div>
         <div>
           <div class="flex items-center space-x-2">
-            <span class="bg-pnm-red text-white text-[10px] font-black px-2 py-0.5 rounded tracking-wider uppercase">PNM</span>
-            <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-white">ULaMM UMBULHARJ0</h1>
+            <span class="bg-pnm-red text-white text-[10px] font-black px-2 py-0.5 rounded shadow-sm tracking-wider uppercase">PNM</span>
+            <h1 class="text-lg sm:text-xl font-black tracking-tight text-white">ULaMM UMBULHARJ0</h1>
           </div>
           <p class="text-xs text-slate-300 font-medium"> &bull; Dashboard Monitoring Tagihan</p>
         </div>
@@ -78,8 +98,8 @@
           <div id="dateDisplay" class="text-xs font-bold tracking-wide text-white">-- ------ ----</div>
         </div>
         <!-- Refresh Laman -->
-        <button onclick="window.location.reload()" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition duration-200 backdrop-blur-sm border border-white/20 shadow-sm active:scale-95">
-          <i class="fa-solid fa-rotate-right"></i>
+        <button onclick="window.location.reload()" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition duration-200 backdrop-blur-md border border-white/20 shadow-sm active:scale-95">
+          <i class="fa-solid fa-rotate-right text-pnm-cyan"></i>
           <span>RELOAD DATA</span>
         </button>
       </div>
@@ -93,7 +113,7 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
       
       <!-- 1. Total Beban Card -->
-      <div class="bg-white rounded-xl p-5 card-shadow border border-slate-100 flex items-center justify-between relative overflow-hidden">
+      <div class="bg-white/90 backdrop-blur-md rounded-xl p-5 card-shadow border border-slate-200/80 flex items-center justify-between relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5">
         <div class="absolute top-0 left-0 w-1.5 h-full bg-slate-600"></div>
         <div class="pl-2">
           <div class="flex items-center gap-2 mb-1">
@@ -109,7 +129,7 @@
       </div>
 
       <!-- 2. Sisa Beban (OS) Card -->
-      <div class="bg-white rounded-xl p-5 card-shadow border border-slate-100 flex items-center justify-between relative overflow-hidden">
+      <div class="bg-white/90 backdrop-blur-md rounded-xl p-5 card-shadow border border-slate-200/80 flex items-center justify-between relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5">
         <div class="absolute top-0 left-0 w-1.5 h-full bg-pnm-navy"></div>
         <div class="pl-2">
           <div class="flex items-center gap-2 mb-1">
@@ -125,7 +145,7 @@
       </div>
 
       <!-- 3. SCR % Card -->
-      <div class="bg-white rounded-xl p-5 card-shadow border border-slate-100 flex items-center justify-between relative overflow-hidden">
+      <div class="bg-white/90 backdrop-blur-md rounded-xl p-5 card-shadow border border-slate-200/80 flex items-center justify-between relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5">
         <div class="absolute top-0 left-0 w-1.5 h-full bg-pnm-red"></div>
         <div class="pl-2">
           <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">SUCCSES RATE</p>
@@ -139,7 +159,7 @@
     </div>
 
     <!-- FILTER SECTION -->
-    <div class="bg-white rounded-xl p-5 card-shadow border border-slate-100 space-y-4">
+    <div class="bg-white/90 backdrop-blur-md rounded-xl p-5 card-shadow border border-slate-200/80 space-y-4">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
         <h2 class="text-sm font-bold text-pnm-navy flex items-center gap-2 tracking-wide uppercase">
           <i class="fa-solid fa-filter text-pnm-red"></i> Filter & Pencarian Data
@@ -176,7 +196,7 @@
     </div>
 
     <!-- AUTO DATA TABS FOR SELECTED NASABAH -->
-    <div id="autoDataCard" class="bg-gradient-to-r from-pnm-navy to-pnm-darknavy rounded-xl p-5 text-white shadow-xl border border-blue-900/50 transition-all duration-300">
+    <div id="autoDataCard" class="bg-gradient-to-r from-pnm-navy via-pnm-darknavy to-pnm-navy rounded-xl p-5 text-white shadow-xl border border-blue-900/60 transition-all duration-300">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-blue-800/60 pb-3 mb-4 gap-2">
         <div class="flex items-center space-x-3">
           <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -228,8 +248,8 @@
       </div>
     </div>
 
-    <!-- RINCIAN DATA NASABAH TABLE -->
-    <div class="bg-white rounded-xl card-shadow border border-slate-100 overflow-hidden">
+    <!-- RINCIAN DATA NASABAH TABLE WITH DOUBLE HORIZONTAL SCROLLBAR -->
+    <div class="bg-white/90 backdrop-blur-md rounded-xl card-shadow border border-slate-200/80 overflow-hidden">
       <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h3 class="font-bold text-pnm-navy text-base flex items-center gap-2">
@@ -239,8 +259,14 @@
         </div>
       </div>
 
-      <div class="overflow-x-auto custom-scrollbar">
-        <table class="w-full text-left border-collapse text-xs">
+      <!-- TOP HORIZONTAL SCROLLBAR BAR -->
+      <div id="topScrollContainer" class="overflow-x-auto custom-scrollbar bg-slate-100/80 border-b border-slate-200" style="height: 12px;">
+        <div id="topScrollDummy" style="height: 12px; width: 1200px;"></div>
+      </div>
+
+      <!-- BOTTOM HORIZONTAL SCROLLBAR CONTAINER FOR MAIN TABLE -->
+      <div id="tableScrollContainer" class="overflow-x-auto custom-scrollbar">
+        <table id="mainTable" class="w-full text-left border-collapse text-xs">
           <thead>
             <tr class="bg-pnm-navy text-white uppercase font-bold tracking-wider text-[11px]">
               <th class="py-3.5 px-4 whitespace-nowrap">NAMA<br><span class="text-blue-200 font-normal"></span></th>
@@ -285,6 +311,42 @@
     let rawDatabase = [];
     let rawBasedon = [];
     let filteredDatabase = [];
+
+    // Synchronize Top & Bottom Scrollbars
+    function setupDoubleScroll() {
+      const topScroll = document.getElementById('topScrollContainer');
+      const bottomScroll = document.getElementById('tableScrollContainer');
+      const topDummy = document.getElementById('topScrollDummy');
+      const table = document.getElementById('mainTable');
+
+      if (!topScroll || !bottomScroll || !topDummy || !table) return;
+
+      function updateDummyWidth() {
+        topDummy.style.width = table.scrollWidth + 'px';
+      }
+
+      updateDummyWidth();
+      window.addEventListener('resize', updateDummyWidth);
+
+      let isSyncingTop = false;
+      let isSyncingBottom = false;
+
+      topScroll.addEventListener('scroll', () => {
+        if (!isSyncingTop) {
+          isSyncingBottom = true;
+          bottomScroll.scrollLeft = topScroll.scrollLeft;
+        }
+        isSyncingTop = false;
+      });
+
+      bottomScroll.addEventListener('scroll', () => {
+        if (!isSyncingBottom) {
+          isSyncingTop = true;
+          topScroll.scrollLeft = bottomScroll.scrollLeft;
+        }
+        isSyncingBottom = false;
+      });
+    }
 
     // Currency Formatter dengan pemisah titik (bold tegas)
     function formatNumber(num) {
@@ -349,6 +411,7 @@
       });
 
       applyFilters();
+      setupDoubleScroll();
     }
 
     // Logika Filtering Kolektibilitas
@@ -402,6 +465,7 @@
       if (currentSelected) {
         updateAutoTabs(currentSelected);
       }
+      setupDoubleScroll();
     }
 
     /**
@@ -453,7 +517,7 @@
 
       filteredDatabase.forEach(row => {
         const tr = document.createElement('tr');
-        tr.className = 'hover:bg-blue-50/50 transition cursor-pointer border-b border-slate-100';
+        tr.className = 'hover:bg-blue-50/60 transition cursor-pointer border-b border-slate-100';
         tr.onclick = () => selectNasabahDirect(row);
 
         // Urutan Kolom: C | B | J | G | H | D | E | F | K | L | M
@@ -461,7 +525,7 @@
           <td class="py-3.5 px-4 font-bold text-pnm-navy whitespace-nowrap">${row.colC || '-'}</td>
           <td class="py-3.5 px-4 text-slate-700 whitespace-nowrap font-medium">${row.colB || '-'}</td>
           <td class="py-3.5 px-4 font-bold text-emerald-600 whitespace-nowrap">${formatNumber(row.colJ)}</td>
-          <td class="py-3.5 px-4 text-right font-bold text-amber-500 whitespace-nowrap">${formatNumber(row.colG)}</td>
+          <td class="py-3.5 px-4 text-right font-bold text-amber-600 whitespace-nowrap">${formatNumber(row.colG)}</td>
           <td class="py-3.5 px-4 text-right font-bold text-pnm-red whitespace-nowrap">${formatNumber(row.colH)}</td>
           <td class="py-3.5 px-4 text-slate-700 whitespace-nowrap font-medium">${row.colD || '-'}</td>
           <td class="py-3.5 px-4 text-slate-700 whitespace-nowrap font-medium">${row.colE || '-'}</td>
@@ -472,6 +536,8 @@
         `;
         tbody.appendChild(tr);
       });
+
+      setupDoubleScroll();
     }
 
     // Auto-Suggest Handler Kolom C
@@ -586,7 +652,11 @@
       }
     });
 
-    window.onload = initData;
+    window.onload = function() {
+      initData();
+      setupDoubleScroll();
+    };
   </script>
 </body>
 </html>
+```eof
