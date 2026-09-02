@@ -5,11 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PNM ULaMM UMBULHARJO - MONITORING TAGIHAN</title>
   
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Google Fonts: Inter -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <script>
@@ -77,7 +74,6 @@
 </head>
 <body class="text-slate-800 antialiased min-h-screen flex flex-col">
 
-  <!-- BRANDING HEADER -->
   <header class="pnm-gradient text-white border-b-4 border-[#8DC63F] shadow-xl sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
       <div class="flex items-center space-x-4">
@@ -89,7 +85,7 @@
             <span class="bg-[#8DC63F] text-white text-[10px] font-black px-2 py-0.5 rounded shadow-sm tracking-wider uppercase">PNM</span>
             <h1 class="text-lg sm:text-xl font-black tracking-tight text-white">ULaMM UMBULHARJ0</h1>
           </div>
-          <p class="text-xs text-slate-300 font-medium"> &bull; Dashboard Monitoring Tagihan</p>
+          <p class="text-xs text-slate-300 font-medium"> • Dashboard Monitoring Tagihan</p>
         </div>
       </div>
 
@@ -98,7 +94,6 @@
           <div class="text-[11px] uppercase tracking-wider text-slate-300 font-semibold">Tanggal</div>
           <div id="dateDisplay" class="text-xs font-bold tracking-wide text-white">-- ------ ----</div>
         </div>
-        <!-- Refresh Laman -->
         <button onclick="window.location.reload()" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition duration-200 backdrop-blur-md border border-white/20 shadow-sm active:scale-95">
           <i class="fa-solid fa-rotate-right text-pnm-cyan"></i>
           <span>RELOAD DATA</span>
@@ -107,204 +102,262 @@
     </div>
   </header>
 
-  <!-- MAIN CONTAINER -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full space-y-6">
 
-    <!-- KPI CARDS SUMMARY -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+    <div class="flex border-b border-slate-300 gap-2">
+      <button id="btnTabMonitoring" onclick="switchTab('monitoring')" class="px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-pnm-navy bg-white text-pnm-navy shadow-sm">
+        <i class="fa-solid fa-chart-line mr-1.5"></i> Monitoring
+      </button>
+      <button id="btnTabKualitas" onclick="switchTab('kualitas')" class="px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-transparent text-slate-500 hover:text-pnm-navy hover:bg-white/50">
+        <i class="fa-solid fa-layer-group text-[#8DC63F] mr-1.5"></i> Kualitas
+      </button>
+    </div>
+
+    <div id="tabContentMonitoring" class="space-y-6">
       
-      <!-- 1. Total Beban Card -->
-      <div class="bg-white/90 backdrop-blur-md rounded-xl p-5 card-shadow border border-slate-200/80 flex items-center justify-between relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5">
-        <div class="absolute top-0 left-0 w-1.5 h-full bg-slate-600"></div>
-        <div class="pl-2">
-          <div class="flex items-center gap-2 mb-1">
-            <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">TOTAL BEBAN</p>
-            <span id="noaTotalBeban" class="text-[10px] font-extrabold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full border border-slate-200">NOA: 0</span>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        
+        <div class="bg-white/90 backdrop-blur-md rounded-xl p-5 card-shadow border border-slate-200/80 flex items-center justify-between relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5">
+          <div class="absolute top-0 left-0 w-1.5 h-full bg-slate-600"></div>
+          <div class="pl-2">
+            <div class="flex items-center gap-2 mb-1">
+              <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">TOTAL BEBAN</p>
+              <span id="noaTotalBeban" class="text-[10px] font-extrabold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full border border-slate-200">NOA: 0</span>
+            </div>
+            <h3 id="cardTotalBeban" class="text-2xl font-black text-slate-800">0</h3>
+            <p class="text-[11px] text-slate-500 mt-1">Based On Closing Bulan Lalu</p>
           </div>
-          <h3 id="cardTotalBeban" class="text-2xl font-black text-slate-800">0</h3>
-          <p class="text-[11px] text-slate-500 mt-1">Based On Closing Bulan Lalu</p>
-        </div>
-        <div class="w-12 h-12 bg-slate-100 text-slate-700 rounded-xl flex items-center justify-center text-xl font-bold shadow-inner">
-          <i class="fa-solid fa-vault"></i>
-        </div>
-      </div>
-
-      <!-- 2. Sisa Beban (OS) Card -->
-      <div class="bg-white/90 backdrop-blur-md rounded-xl p-5 card-shadow border border-slate-200/80 flex items-center justify-between relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5">
-        <div class="absolute top-0 left-0 w-1.5 h-full bg-pnm-navy"></div>
-        <div class="pl-2">
-          <div class="flex items-center gap-2 mb-1">
-            <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">SISA BEBAN</p>
-            <span id="noaSisaBeban" class="text-[10px] font-extrabold bg-blue-50 text-pnm-navy px-2 py-0.5 rounded-full border border-blue-100">NOA: 0</span>
+          <div class="w-12 h-12 bg-slate-100 text-slate-700 rounded-xl flex items-center justify-center text-xl font-bold shadow-inner">
+            <i class="fa-solid fa-vault"></i>
           </div>
-          <h3 id="cardSisaBeban" class="text-2xl font-black text-pnm-navy">0</h3>
-          <p class="text-[11px] text-slate-500 mt-1">Sisa Beban Bulan Berjalan</p>
         </div>
-        <div class="w-12 h-12 bg-blue-50 text-pnm-navy rounded-xl flex items-center justify-center text-xl font-bold shadow-inner">
-          <i class="fa-solid fa-scale-balanced"></i>
+
+        <div class="bg-white/90 backdrop-blur-md rounded-xl p-5 card-shadow border border-slate-200/80 flex items-center justify-between relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5">
+          <div class="absolute top-0 left-0 w-1.5 h-full bg-pnm-navy"></div>
+          <div class="pl-2">
+            <div class="flex items-center gap-2 mb-1">
+              <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">SISA BEBAN</p>
+              <span id="noaSisaBeban" class="text-[10px] font-extrabold bg-blue-50 text-pnm-navy px-2 py-0.5 rounded-full border border-blue-100">NOA: 0</span>
+            </div>
+            <h3 id="cardSisaBeban" class="text-2xl font-black text-pnm-navy">0</h3>
+            <p class="text-[11px] text-slate-500 mt-1">Sisa Beban Bulan Berjalan</p>
+          </div>
+          <div class="w-12 h-12 bg-blue-50 text-pnm-navy rounded-xl flex items-center justify-center text-xl font-bold shadow-inner">
+            <i class="fa-solid fa-scale-balanced"></i>
+          </div>
+        </div>
+
+        <div class="bg-white/90 backdrop-blur-md rounded-xl p-5 card-shadow border border-slate-200/80 flex items-center justify-between relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5">
+          <div class="absolute top-0 left-0 w-1.5 h-full bg-pnm-red"></div>
+          <div class="pl-2">
+            <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">SUCCSES RATE</p>
+            <h3 id="cardSCR" class="text-2xl font-black text-pnm-red">0.00%</h3>
+            <p class="text-[11px] text-slate-500 mt-1"></p>
+          </div>
+          <div class="w-12 h-12 bg-red-50 text-pnm-red rounded-xl flex items-center justify-center text-xl font-bold shadow-inner">
+            <i class="fa-solid fa-bullseye"></i>
+          </div>
         </div>
       </div>
 
-      <!-- 3. SCR % Card -->
-      <div class="bg-white/90 backdrop-blur-md rounded-xl p-5 card-shadow border border-slate-200/80 flex items-center justify-between relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5">
-        <div class="absolute top-0 left-0 w-1.5 h-full bg-pnm-red"></div>
-        <div class="pl-2">
-          <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">SUCCSES RATE</p>
-          <h3 id="cardSCR" class="text-2xl font-black text-pnm-red">0.00%</h3>
-          <p class="text-[11px] text-slate-500 mt-1"></p>
-        </div>
-        <div class="w-12 h-12 bg-red-50 text-pnm-red rounded-xl flex items-center justify-center text-xl font-bold shadow-inner">
-          <i class="fa-solid fa-bullseye"></i>
-        </div>
-      </div>
-    </div>
-
-    <!-- FILTER SECTION -->
-    <div class="bg-white/90 backdrop-blur-md rounded-xl p-5 card-shadow border border-slate-200/80 space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-        <h2 class="text-sm font-bold text-pnm-navy flex items-center gap-2 tracking-wide uppercase">
-          <i class="fa-solid fa-filter text-pnm-red"></i> Filter Kolektibilitas & Pencarian Data Nasabah 
-        </h2>
-        <span id="recordCount" class="text-xs font-bold bg-slate-100 text-slate-600 px-3 py-1 rounded-full border border-slate-200">0 Number of Account</span>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Filter Kolektibilitas Dropdown -->
-        <div>
-          <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-2">
-            Kolektibilitas
-          </label>
-          <select id="selectKolek" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-pnm-navy transition cursor-pointer">
-            <option value="">-- SEMUA KOLEKTIBILITAS --</option>
-          </select>
+      <div class="bg-white/90 backdrop-blur-md rounded-xl p-5 card-shadow border border-slate-200/80 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <h2 class="text-sm font-bold text-pnm-navy flex items-center gap-2 tracking-wide uppercase">
+            <i class="fa-solid fa-filter text-pnm-red"></i> Filter Kolektibilitas & Pencarian Data Nasabah 
+          </h2>
+          <span id="recordCount" class="text-xs font-bold bg-slate-100 text-slate-600 px-3 py-1 rounded-full border border-slate-200">0 Number of Account</span>
         </div>
 
-        <!-- Auto-Suggest Search Nasabah -->
-        <div class="relative">
-          <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-2">
-            Nama Nasabah
-          </label>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-2">
+              Kolektibilitas
+            </label>
+            <select id="selectKolek" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-pnm-navy transition cursor-pointer">
+              <option value="">-- SEMUA KOLEKTIBILITAS --</option>
+            </select>
+          </div>
+
           <div class="relative">
-            <input type="text" id="inputNasabah" oninput="onNasabahInput()" placeholder="Ketik nama nasabah..." autocomplete="off" class="w-full bg-slate-50 border border-slate-200 rounded-lg pl-10 pr-10 py-2.5 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-pnm-navy transition">
-            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400"></i>
-            <button onclick="clearNasabahSearch()" id="btnClearSearch" class="hidden absolute right-3 top-3 text-slate-400 hover:text-slate-600">
-              <i class="fa-solid fa-xmark"></i>
-            </button>
+            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-2">
+              Nama Nasabah
+            </label>
+            <div class="relative">
+              <input type="text" id="inputNasabah" oninput="onNasabahInput()" placeholder="Ketik nama nasabah..." autocomplete="off" class="w-full bg-slate-50 border border-slate-200 rounded-lg pl-10 pr-10 py-2.5 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-pnm-navy transition">
+              <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400"></i>
+              <button onclick="clearNasabahSearch()" id="btnClearSearch" class="hidden absolute right-3 top-3 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            <div id="suggestBox" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-lg shadow-xl z-30 max-h-60 overflow-y-auto custom-scrollbar divide-y divide-slate-100"></div>
           </div>
-          <div id="suggestBox" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-lg shadow-xl z-30 max-h-60 overflow-y-auto custom-scrollbar divide-y divide-slate-100"></div>
+        </div>
+      </div>
+
+      <div id="autoDataCard" class="bg-gradient-to-r from-pnm-navy via-pnm-darknavy to-pnm-navy rounded-xl p-5 text-white shadow-xl border border-blue-900/60 transition-all duration-300">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-blue-800/60 pb-3 mb-4 gap-2">
+          <div class="flex items-center space-x-3">
+            <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>
+            <h3 id="selectedNama" class="font-extrabold text-base sm:text-lg tracking-wide text-white">Informasi Detail Nasabah</h3>
+          </div>
+          <span class="text-[11px] text-blue-200 bg-white/10 px-3 py-1 rounded-full font-semibold self-start sm:self-auto backdrop-blur-sm border border-white/10">Data Nasabah</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+          <div class="bg-white/10 backdrop-blur-md rounded-lg p-3.5 border border-white/10">
+            <p class="text-[10px] uppercase tracking-wider text-blue-200 font-bold mb-1">NOREK PEMBIAYAAN</p>
+            <p id="tabNorek" class="text-sm font-extrabold text-white tracking-wider font-mono">-</p>
+          </div>
+
+          <div class="bg-white/10 backdrop-blur-md rounded-lg p-3.5 border border-white/10">
+            <p class="text-[10px] uppercase tracking-wider text-blue-200 font-bold mb-1">PLAFOND</p>
+            <p id="tabPlafond" class="text-sm font-extrabold text-emerald-400">0</p>
+          </div>
+
+          <div class="bg-white/10 backdrop-blur-md rounded-lg p-3.5 border border-white/10">
+            <p class="text-[10px] uppercase tracking-wider text-blue-200 font-bold mb-1">OUTSTANDING</p>
+            <p id="tabOS" class="text-sm font-extrabold text-amber-300">0</p>
+          </div>
+
+          <div class="bg-white/10 backdrop-blur-md rounded-lg p-3.5 border border-white/10">
+            <p class="text-[10px] uppercase tracking-wider text-blue-200 font-bold mb-1">BRIVA</p>
+            <p id="tabBriva" class="text-sm font-extrabold text-amber-300 tracking-wider font-mono">-</p>
+          </div>
+
+          <div class="bg-white/10 backdrop-blur-md rounded-lg p-3.5 border border-white/10 flex flex-col justify-between">
+            <p class="text-[10px] uppercase tracking-wider text-blue-200 font-bold mb-1">ALAMAT</p>
+            <div id="tabLokasiContainer">
+              <span class="text-xs text-blue-300 italic font-medium">-- AUTO --</span>
+            </div>
+          </div>
+
+          <div class="bg-white/10 backdrop-blur-md rounded-lg p-3.5 border border-white/10 flex flex-col justify-between">
+            <p class="text-[10px] uppercase tracking-wider text-blue-200 font-bold mb-1">KONTAK</p>
+            <div id="tabHpContainer">
+              <span class="text-xs text-blue-300 italic font-medium">-- AUTO -- </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white/90 backdrop-blur-md rounded-xl card-shadow border border-slate-200/80 overflow-hidden">
+        <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h3 class="font-bold text-pnm-navy text-base flex items-center gap-2">
+              <i class="fa-solid fa-table-list text-pnm-red"></i> Data Nasabah
+            </h3>
+            <p class="text-xs text-slate-500 mt-0.5">ULaMM UMBULHARJ0</p>
+          </div>
+        </div>
+
+        <div id="topScrollContainer" class="overflow-x-auto custom-scrollbar bg-slate-100/80 border-b border-slate-200" style="height: 12px;">
+          <div id="topScrollDummy" style="height: 12px; width: 1200px;"></div>
+        </div>
+
+        <div id="tableScrollContainer" class="overflow-x-auto custom-scrollbar">
+          <table id="mainTable" class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-pnm-navy text-white uppercase font-bold tracking-wider text-[11px]">
+                <th class="py-3.5 px-4 whitespace-nowrap">NAMA<br><span class="text-blue-200 font-normal"></span></th>
+                <th class="py-3.5 px-4 whitespace-nowrap">NOREK<br><span class="text-blue-200 font-normal"></span></th>
+                <th class="py-3.5 px-4 whitespace-nowrap">PLAFOND<br><span class="text-blue-200 font-normal"></span></th>
+                <th class="py-3.5 px-4 whitespace-nowrap text-right">OUTSTANDING<br><span class="text-blue-200 font-normal"></span></th>
+                <th class="py-3.5 px-4 whitespace-nowrap text-right">SISA DCA<br><span class="text-blue-200 font-normal"></span></th>
+                <th class="py-3.5 px-4 whitespace-nowrap">REALISASI<br><span class="text-blue-200 font-normal"></span></th>
+                <th class="py-3.5 px-4 whitespace-nowrap">TENOR<br><span class="text-blue-200 font-normal"></span></th>
+                <th class="py-3.5 px-4 whitespace-nowrap">JATUH TEMPO<br><span class="text-blue-200 font-normal"></span></th>
+                <th class="py-3.5 px-4 whitespace-nowrap">AGING<br><span class="text-blue-200 font-normal"></span></th>
+                <th class="py-3.5 px-4 whitespace-nowrap">TAGIHAN KE-<br><span class="text-blue-200 font-normal"></span></th>
+                <th class="py-3.5 px-4 whitespace-nowrap">BRIVA<br><span class="text-blue-200 font-normal"></span></th>
+              </tr>
+            </thead>
+            <tbody id="tableBody" class="divide-y divide-slate-100 font-medium">
+              <tr>
+                <td colspan="11" class="py-12 text-center text-slate-400">
+                  <i class="fa-solid fa-spinner fa-spin text-2xl text-pnm-navy mb-2"></i>
+                  <p class="text-xs font-semibold">Loading...</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
 
-    <!-- AUTO DATA TABS FOR SELECTED NASABAH -->
-    <div id="autoDataCard" class="bg-gradient-to-r from-pnm-navy via-pnm-darknavy to-pnm-navy rounded-xl p-5 text-white shadow-xl border border-blue-900/60 transition-all duration-300">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-blue-800/60 pb-3 mb-4 gap-2">
-        <div class="flex items-center space-x-3">
-          <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>
-          <h3 id="selectedNama" class="font-extrabold text-base sm:text-lg tracking-wide text-white">Informasi Detail Nasabah</h3>
-        </div>
-        <span class="text-[11px] text-blue-200 bg-white/10 px-3 py-1 rounded-full font-semibold self-start sm:self-auto backdrop-blur-sm border border-white/10">Data Nasabah</span>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
-        <!-- NOREK -->
-        <div class="bg-white/10 backdrop-blur-md rounded-lg p-3.5 border border-white/10">
-          <p class="text-[10px] uppercase tracking-wider text-blue-200 font-bold mb-1">NOREK PEMBIAYAAN</p>
-          <p id="tabNorek" class="text-sm font-extrabold text-white tracking-wider font-mono">-</p>
+    <div id="tabContentKualitas" class="hidden space-y-6">
+      
+      <div class="bg-white/90 backdrop-blur-md rounded-xl p-6 card-shadow border border-slate-200/80">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-6">
+          <h2 class="text-pnm-navy text-xl font-black uppercase tracking-wider flex items-center gap-2">
+            <i class="fa-solid fa-chart-pie text-pnm-cyan"></i> OVERALL KUALITAS PORTOFOLIO (ALL)
+          </h2>
+          <span class="text-xs font-extrabold bg-blue-50 text-pnm-navy px-3 py-1 rounded-full border border-blue-100">Total Ringkasan Unit</span>
         </div>
 
-        <!-- PLAFOND -->
-        <div class="bg-white/10 backdrop-blur-md rounded-lg p-3.5 border border-white/10">
-          <p class="text-[10px] uppercase tracking-wider text-blue-200 font-bold mb-1">PLAFOND</p>
-          <p id="tabPlafond" class="text-sm font-extrabold text-emerald-400">0</p>
-        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center max-w-5xl mx-auto">
+          <div class="space-y-4">
+            <div class="bg-white rounded-xl p-4 card-shadow border-l-4 border-slate-600 border border-slate-100">
+              <h4 class="font-extrabold text-slate-400 text-xs tracking-wider uppercase mb-2">TOTAL BEBAN</h4>
+              <div class="flex justify-between items-center text-xs text-slate-500 font-semibold mb-1">
+                <span>NOA</span>
+                <span>OS</span>
+              </div>
+              <div class="flex justify-between items-center text-xl font-black text-slate-800">
+                <span id="kual_all_tb_noa">0</span>
+                <span id="kual_all_tb_os">0</span>
+              </div>
+            </div>
 
-        <!-- OS -->
-        <div class="bg-white/10 backdrop-blur-md rounded-lg p-3.5 border border-white/10">
-          <p class="text-[10px] uppercase tracking-wider text-blue-200 font-bold mb-1">OUTSTANDING</p>
-          <p id="tabOS" class="text-sm font-extrabold text-amber-300">0</p>
-        </div>
+            <div class="bg-white rounded-xl p-4 card-shadow border-l-4 border-pnm-red border border-slate-100">
+              <h4 class="font-extrabold text-slate-400 text-xs tracking-wider uppercase mb-2">SISA BEBAN</h4>
+              <div class="flex justify-between items-center text-xs text-slate-500 font-semibold mb-1">
+                <span>NOA</span>
+                <span>OS</span>
+              </div>
+              <div class="flex justify-between items-center text-xl font-black text-pnm-red">
+                <span id="kual_all_sb_noa">0</span>
+                <span id="kual_all_sb_os">0</span>
+              </div>
+            </div>
+          </div>
 
-        <!-- BRIVA -->
-        <div class="bg-white/10 backdrop-blur-md rounded-lg p-3.5 border border-white/10">
-          <p class="text-[10px] uppercase tracking-wider text-blue-200 font-bold mb-1">BRIVA</p>
-          <p id="tabBriva" class="text-sm font-extrabold text-amber-300 tracking-wider font-mono">-</p>
-        </div>
-
-        <!-- LOKASI MAPS (RED PIN) -->
-        <div class="bg-white/10 backdrop-blur-md rounded-lg p-3.5 border border-white/10 flex flex-col justify-between">
-          <p class="text-[10px] uppercase tracking-wider text-blue-200 font-bold mb-1">ALAMAT</p>
-          <div id="tabLokasiContainer">
-            <span class="text-xs text-blue-300 italic font-medium">-- AUTO --</span>
+          <div class="flex justify-center items-center">
+            <div id="kual_all_chart" class="relative w-56 h-56 rounded-full flex items-center justify-center shadow-xl border-4 border-white transition-all duration-500"
+                 style="background: conic-gradient(#8DC63F 0% 0%, #E31E24 0% 100%);">
+              
+              <div class="w-40 h-40 bg-white rounded-full flex flex-col items-center justify-center text-center p-3 shadow-inner z-10 border border-slate-100">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">SUCCESS RATE</span>
+                <span id="kual_all_scr" class="font-black text-3xl text-pnm-navy my-0.5">0.00%</span>
+                
+                <div class="mt-1 pt-1 border-t border-slate-100 w-full text-[10px] font-bold text-slate-600">
+                  <p class="text-[#8DC63F] font-extrabold flex justify-between px-1">
+                    <span>REALISASI:</span>
+                    <span id="kual_all_real_os">0</span>
+                  </p>
+                  <p class="text-slate-400 font-semibold flex justify-between px-1">
+                    <span>NOA BAYAR:</span>
+                    <span id="kual_all_real_noa">0</span>
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
 
-        <!-- NOMOR HP (DIRECT WA.ME) -->
-        <div class="bg-white/10 backdrop-blur-md rounded-lg p-3.5 border border-white/10 flex flex-col justify-between">
-          <p class="text-[10px] uppercase tracking-wider text-blue-200 font-bold mb-1">KONTAK</p>
-          <div id="tabHpContainer">
-            <span class="text-xs text-blue-300 italic font-medium">-- AUTO -- </span>
-          </div>
+      <div id="kualitasGridContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
         </div>
-      </div>
-    </div>
-
-    <!-- RINCIAN DATA NASABAH TABLE WITH DOUBLE HORIZONTAL SCROLLBAR -->
-    <div class="bg-white/90 backdrop-blur-md rounded-xl card-shadow border border-slate-200/80 overflow-hidden">
-      <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h3 class="font-bold text-pnm-navy text-base flex items-center gap-2">
-            <i class="fa-solid fa-table-list text-pnm-red"></i> Data Nasabah
-          </h3>
-          <p class="text-xs text-slate-500 mt-0.5">ULaMM UMBULHARJ0</p>
-        </div>
-      </div>
-
-      <!-- TOP HORIZONTAL SCROLLBAR BAR -->
-      <div id="topScrollContainer" class="overflow-x-auto custom-scrollbar bg-slate-100/80 border-b border-slate-200" style="height: 12px;">
-        <div id="topScrollDummy" style="height: 12px; width: 1200px;"></div>
-      </div>
-
-      <!-- BOTTOM HORIZONTAL SCROLLBAR CONTAINER FOR MAIN TABLE -->
-      <div id="tableScrollContainer" class="overflow-x-auto custom-scrollbar">
-        <table id="mainTable" class="w-full text-left border-collapse text-xs">
-          <thead>
-            <tr class="bg-pnm-navy text-white uppercase font-bold tracking-wider text-[11px]">
-              <th class="py-3.5 px-4 whitespace-nowrap">NAMA<br><span class="text-blue-200 font-normal"></span></th>
-              <th class="py-3.5 px-4 whitespace-nowrap">NOREK<br><span class="text-blue-200 font-normal"></span></th>
-              <th class="py-3.5 px-4 whitespace-nowrap">PLAFOND<br><span class="text-blue-200 font-normal"></span></th>
-              <th class="py-3.5 px-4 whitespace-nowrap text-right">OUTSTANDING<br><span class="text-blue-200 font-normal"></span></th>
-              <th class="py-3.5 px-4 whitespace-nowrap text-right">SISA DCA<br><span class="text-blue-200 font-normal"></span></th>
-              <th class="py-3.5 px-4 whitespace-nowrap">REALISASI<br><span class="text-blue-200 font-normal"></span></th>
-              <th class="py-3.5 px-4 whitespace-nowrap">TENOR<br><span class="text-blue-200 font-normal"></span></th>
-              <th class="py-3.5 px-4 whitespace-nowrap">JATUH TEMPO<br><span class="text-blue-200 font-normal"></span></th>
-              <th class="py-3.5 px-4 whitespace-nowrap">AGING<br><span class="text-blue-200 font-normal"></span></th>
-              <th class="py-3.5 px-4 whitespace-nowrap">TAGIHAN KE-<br><span class="text-blue-200 font-normal"></span></th>
-              <th class="py-3.5 px-4 whitespace-nowrap">BRIVA<br><span class="text-blue-200 font-normal"></span></th>
-            </tr>
-          </thead>
-          <tbody id="tableBody" class="divide-y divide-slate-100 font-medium">
-            <tr>
-              <td colspan="11" class="py-12 text-center text-slate-400">
-                <i class="fa-solid fa-spinner fa-spin text-2xl text-pnm-navy mb-2"></i>
-                <p class="text-xs font-semibold">Loading...</p>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
     </div>
 
   </main>
 
   <footer class="bg-slate-900 text-slate-400 text-xs py-5 border-t border-slate-800 mt-10">
     <div class="max-w-7xl mx-auto px-4 text-center space-y-1">
-      <p class="font-semibold text-slate-300">Dashboard Monitoring Tagihan &bull; PNM ULaMM UMBULHARJO</p>
-      <p class="text-slate-500">&copy; 2026 TEAM UNIT PNM ULaMM UMBULHARJO. All Rights Reserved.</p>
+      <p class="font-semibold text-slate-300">Dashboard Monitoring Tagihan • PNM ULaMM UMBULHARJO</p>
+      <p class="text-slate-500">© 2026 TEAM UNIT PNM ULaMM UMBULHARJO. All Rights Reserved.</p>
     </div>
   </footer>
 
-  <!-- SCRIPT INTEGRASI FRONTEND -->
   <script>
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzw84cvyzW9_eSTUyeiVP08GlvPXeklY6gp-c4uoL7DapBKSwAvSIXg8WsJtuqQNeTC/exec"; 
 
@@ -312,6 +365,30 @@
     let rawDatabase = [];
     let rawBasedon = [];
     let filteredDatabase = [];
+
+    // Tab Switcher Logic
+    function switchTab(tabName) {
+      const btnMon = document.getElementById('btnTabMonitoring');
+      const btnKual = document.getElementById('btnTabKualitas');
+      const contentMon = document.getElementById('tabContentMonitoring');
+      const contentKual = document.getElementById('tabContentKualitas');
+
+      if (tabName === 'monitoring') {
+        contentMon.classList.remove('hidden');
+        contentKual.classList.add('hidden');
+
+        btnMon.className = "px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-pnm-navy bg-white text-pnm-navy shadow-sm";
+        btnKual.className = "px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-transparent text-slate-500 hover:text-pnm-navy hover:bg-white/50";
+      } else {
+        contentMon.classList.add('hidden');
+        contentKual.classList.remove('hidden');
+
+        btnKual.className = "px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-pnm-navy bg-white text-pnm-navy shadow-sm";
+        btnMon.className = "px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-transparent text-slate-500 hover:text-pnm-navy hover:bg-white/50";
+        
+        renderKualitasTab();
+      }
+    }
 
     // Format Tanggal ke DD-MMM-YYYY (misal: 31-Jan-2030)
     function formatDateCustom(val) {
@@ -430,6 +507,7 @@
 
       applyFilters();
       setupDoubleScroll();
+      renderKualitasTab();
     }
 
     // Logika Filtering Kolektibilitas
@@ -515,6 +593,125 @@
 
       document.getElementById('cardSCR').innerText = scr.toFixed(2) + "%";
       document.getElementById('recordCount').innerText = `${filteredDatabase.length} Number of Account`;
+    }
+
+    // Render Tab Kualitas (Kolektibilitas Cards)
+    function renderKualitasTab() {
+      // 1. Render ALL / Total OVERALL
+      const totalBebanAll = rawBasedon.reduce((acc, r) => acc + (parseFloat(r.colD) || 0), 0);
+      const noaTotalAll = rawBasedon.length;
+      const sisaBebanAll = rawDatabase.reduce((acc, r) => acc + (parseFloat(r.colG) || 0), 0);
+      const noaSisaAll = rawDatabase.length;
+
+      let scrAll = 0;
+      if (totalBebanAll > 0) {
+        scrAll = ((totalBebanAll - sisaBebanAll) / totalBebanAll) * 100;
+      }
+      if (scrAll < 0) scrAll = 0;
+      if (scrAll > 100) scrAll = 100;
+
+      const realisasiOsAll = Math.max(0, totalBebanAll - sisaBebanAll);
+      const realisasiNoaAll = Math.max(0, noaTotalAll - noaSisaAll);
+
+      document.getElementById('kual_all_tb_noa').innerText = formatNumber(noaTotalAll);
+      document.getElementById('kual_all_tb_os').innerText = formatNumber(totalBebanAll);
+      document.getElementById('kual_all_sb_noa').innerText = formatNumber(noaSisaAll);
+      document.getElementById('kual_all_sb_os').innerText = formatNumber(sisaBebanAll);
+      document.getElementById('kual_all_scr').innerText = scrAll.toFixed(2) + "%";
+      document.getElementById('kual_all_real_os').innerText = formatNumber(realisasiOsAll);
+      document.getElementById('kual_all_real_noa').innerText = formatNumber(realisasiNoaAll);
+
+      // Render Conic Gradient (Donut Chart Hijau SCR / Merah Sisa)
+      document.getElementById('kual_all_chart').style.background = 
+        `conic-gradient(#8DC63F 0% ${scrAll}%, #E31E24 ${scrAll}% 100%)`;
+
+      // 2. Render Cards Per Kolektibilitas
+      const container = document.getElementById('kualitasGridContainer');
+      container.innerHTML = '';
+
+      const categories = rawOptions.length > 0 ? rawOptions : ["0-HARI | 1A", "31-60 | 1B", "31-60 | 2A", "61-90 | 2B", "3R", "NPL"];
+
+      categories.forEach(cat => {
+        const filteredBasedonCat = rawBasedon.filter(r => filterByKolekLogic(r, cat));
+        const filteredDbCat = rawDatabase.filter(r => filterByKolekLogic(r, cat));
+
+        const tbOs = filteredBasedonCat.reduce((acc, r) => acc + (parseFloat(r.colD) || 0), 0);
+        const tbNoa = filteredBasedonCat.length;
+
+        const sbOs = filteredDbCat.reduce((acc, r) => acc + (parseFloat(r.colG) || 0), 0);
+        const sbNoa = filteredDbCat.length;
+
+        let scr = 0;
+        if (tbOs > 0) {
+          scr = ((tbOs - sbOs) / tbOs) * 100;
+        }
+        if (scr < 0) scr = 0;
+        if (scr > 100) scr = 100;
+
+        const realOs = Math.max(0, tbOs - sbOs);
+        const realNoa = Math.max(0, tbNoa - sbNoa);
+
+        const card = document.createElement('div');
+        card.className = "bg-white/90 backdrop-blur-md rounded-xl p-5 card-shadow border border-slate-200/80 space-y-4";
+        card.innerHTML = `
+          <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+            <h3 class="text-pnm-navy text-sm font-black uppercase tracking-wide flex items-center gap-1.5">
+              <i class="fa-solid fa-[#8DC63F] fa-layer-group text-xs text-[#8DC63F]"></i> ${cat}
+            </h3>
+            <span class="text-[10px] font-bold text-slate-400">KOLEKTIBILITAS</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+            <div class="space-y-2.5">
+              <div class="bg-white rounded-lg p-2.5 card-shadow border-l-4 border-slate-600 border border-slate-100">
+                <p class="font-bold text-slate-400 text-[10px] uppercase mb-1">TOTAL BEBAN</p>
+                <div class="flex justify-between text-[10px] text-slate-400 font-semibold">
+                  <span>NOA</span>
+                  <span>OS</span>
+                </div>
+                <div class="flex justify-between text-xs font-black text-slate-800">
+                  <span>${formatNumber(tbNoa)}</span>
+                  <span>${formatNumber(tbOs)}</span>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-lg p-2.5 card-shadow border-l-4 border-pnm-red border border-slate-100">
+                <p class="font-bold text-slate-400 text-[10px] uppercase mb-1">SISA BEBAN</p>
+                <div class="flex justify-between text-[10px] text-slate-400 font-semibold">
+                  <span>NOA</span>
+                  <span>OS</span>
+                </div>
+                <div class="flex justify-between text-xs font-black text-pnm-red">
+                  <span>${formatNumber(sbNoa)}</span>
+                  <span>${formatNumber(sbOs)}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-center items-center">
+              <div class="relative w-36 h-36 rounded-full flex items-center justify-center shadow-md border-2 border-white"
+                   style="background: conic-gradient(#8DC63F 0% ${scr}%, #E31E24 ${scr}% 100%);">
+                
+                <div class="w-24 h-24 bg-white rounded-full flex flex-col items-center justify-center text-center p-1 shadow-inner z-10 border border-slate-100">
+                  <span class="text-[9px] font-bold uppercase text-slate-400">SUCCESS</span>
+                  <span class="font-black text-base text-pnm-navy">${scr.toFixed(1)}%</span>
+                  
+                  <div class="mt-0.5 pt-0.5 border-t border-slate-100 w-full text-[8px] font-bold">
+                    <p class="text-[#8DC63F] font-extrabold truncate" title="Realisasi OS">
+                      Rp${formatNumber(realOs)}
+                    </p>
+                    <p class="text-slate-400 font-semibold truncate">
+                      ${formatNumber(realNoa)} NOA
+                    </p>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
     }
 
     // Render Tabel Rincian Nasabah
