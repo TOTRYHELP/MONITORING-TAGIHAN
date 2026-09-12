@@ -8,6 +8,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <script>
     tailwind.config = {
@@ -34,7 +36,6 @@
   </script>
 
   <style>
-    /* Futuristic Gray Tech Background */
     body {
       background-color: #EBF0F6;
       background-image: 
@@ -54,7 +55,6 @@
       box-shadow: 0 10px 30px -5px rgba(0, 43, 102, 0.07), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
     }
 
-    /* Custom Scrollbar Stylings */
     .custom-scrollbar::-webkit-scrollbar {
       height: 8px;
       width: 8px;
@@ -66,9 +66,6 @@
     .custom-scrollbar::-webkit-scrollbar-thumb {
       background: #002B66;
       border-radius: 4px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-      background: #E31E24;
     }
   </style>
 </head>
@@ -83,7 +80,7 @@
         <div>
           <div class="flex items-center space-x-2">
             <span class="bg-[#8DC63F] text-white text-[10px] font-black px-2 py-0.5 rounded shadow-sm tracking-wider uppercase">PNM</span>
-            <h1 class="text-lg sm:text-xl font-black tracking-tight text-white">ULaMM UMBULHARJ0</h1>
+            <h1 class="text-lg sm:text-xl font-black tracking-tight text-white">ULaMM UMBULHARJO</h1>
           </div>
           <p class="text-xs text-slate-300 font-medium"> • Dashboard Monitoring Tagihan</p>
         </div>
@@ -104,188 +101,50 @@
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full space-y-6">
 
+    <!-- TAB NAVIGATION -->
     <div class="flex border-b border-slate-300 gap-2">
-      <button id="btnTabMonitoring" onclick="switchTab('monitoring')" class="px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-pnm-navy bg-white text-pnm-navy shadow-sm">
-        <i class="fa-solid fa-chart-line mr-1.5"></i> Monitoring
+      <button id="btnTabOverview" onclick="switchTab('overview')" class="px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-pnm-navy bg-white text-pnm-navy shadow-sm">
+        <i class="fa-solid fa-chart-pie text-pnm-cyan mr-1.5"></i> Overview
       </button>
-      <button id="btnTabKualitas" onclick="switchTab('kualitas')" class="px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-transparent text-slate-500 hover:text-pnm-navy hover:bg-white/50">
-        <i class="fa-solid fa-layer-group text-[#8DC63F] mr-1.5"></i> Kualitas
+      <button id="btnTabMonitoringKualitas" onclick="switchTab('monitoring_kualitas')" class="px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-transparent text-slate-500 hover:text-pnm-navy hover:bg-white/50">
+        <i class="fa-solid fa-layer-group text-[#8DC63F] mr-1.5"></i> Monitoring & Kualitas
       </button>
     </div>
 
-    <div id="tabContentMonitoring" class="space-y-6">
+    <!-- TAB CONTENT: OVERVIEW -->
+    <div id="tabContentOverview" class="space-y-6">
       
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-        
-        <div class="bg-white/90 backdrop-blur-md rounded-xl p-5 card-shadow border border-slate-200/80 flex items-center justify-between relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5">
-          <div class="absolute top-0 left-0 w-1.5 h-full bg-slate-600"></div>
-          <div class="pl-2">
-            <div class="flex items-center gap-2 mb-1">
-              <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">TOTAL BEBAN</p>
-              <span id="noaTotalBeban" class="text-[10px] font-extrabold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full border border-slate-200">NOA: 0</span>
-            </div>
-            <h3 id="cardTotalBeban" class="text-2xl font-black text-slate-800">0</h3>
-            <p class="text-[11px] text-slate-500 mt-1">Based On Closing Bulan Lalu</p>
-          </div>
-          <div class="w-12 h-12 bg-slate-100 text-slate-700 rounded-xl flex items-center justify-center text-xl font-bold shadow-inner">
-            <i class="fa-solid fa-vault"></i>
-          </div>
-        </div>
-
-        <div class="bg-white/90 backdrop-blur-md rounded-xl p-5 card-shadow border border-slate-200/80 flex items-center justify-between relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5">
-          <div class="absolute top-0 left-0 w-1.5 h-full bg-pnm-navy"></div>
-          <div class="pl-2">
-            <div class="flex items-center gap-2 mb-1">
-              <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">SISA BEBAN</p>
-              <span id="noaSisaBeban" class="text-[10px] font-extrabold bg-blue-50 text-pnm-navy px-2 py-0.5 rounded-full border border-blue-100">NOA: 0</span>
-            </div>
-            <h3 id="cardSisaBeban" class="text-2xl font-black text-pnm-navy">0</h3>
-            <p class="text-[11px] text-slate-500 mt-1">Sisa Beban Bulan Berjalan</p>
-          </div>
-          <div class="w-12 h-12 bg-blue-50 text-pnm-navy rounded-xl flex items-center justify-center text-xl font-bold shadow-inner">
-            <i class="fa-solid fa-scale-balanced"></i>
-          </div>
-        </div>
-
-        <div class="bg-white/90 backdrop-blur-md rounded-xl p-5 card-shadow border border-slate-200/80 flex items-center justify-between relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5">
-          <div class="absolute top-0 left-0 w-1.5 h-full bg-pnm-red"></div>
-          <div class="pl-2">
-            <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">SUCCSES RATE</p>
-            <h3 id="cardSCR" class="text-2xl font-black text-pnm-red">0.00%</h3>
-            <p class="text-[11px] text-slate-500 mt-1"></p>
-          </div>
-          <div class="w-12 h-12 bg-red-50 text-pnm-red rounded-xl flex items-center justify-center text-xl font-bold shadow-inner">
-            <i class="fa-solid fa-bullseye"></i>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white/90 backdrop-blur-md rounded-xl p-5 card-shadow border border-slate-200/80 space-y-4">
-        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-          <h2 class="text-sm font-bold text-pnm-navy flex items-center gap-2 tracking-wide uppercase">
-            <i class="fa-solid fa-filter text-pnm-red"></i> Filter Kolektibilitas & Pencarian Data Nasabah 
+      <!-- FILTER UTAMA BULAN -->
+      <div class="bg-white/90 backdrop-blur-md rounded-xl p-5 card-shadow border border-slate-200/80 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-base font-black text-pnm-navy flex items-center gap-2 uppercase tracking-wide">
+            <i class="fa-solid fa-filter text-pnm-cyan"></i> Filter Utama Periode
           </h2>
-          <span id="recordCount" class="text-xs font-bold bg-slate-100 text-slate-600 px-3 py-1 rounded-full border border-slate-200">0 Number of Account</span>
+          <p class="text-xs text-slate-500">Pilih Bulan Berjalan untuk memperbarui nilai KPI & Trendline Grafik</p>
         </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-2">
-              Kolektibilitas
-            </label>
-            <select id="selectKolek" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-pnm-navy transition cursor-pointer">
-              <option value="">-- SEMUA KOLEKTIBILITAS --</option>
-            </select>
-          </div>
-
-          <div class="relative">
-            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-2">
-              Nama Nasabah
-            </label>
-            <div class="relative">
-              <input type="text" id="inputNasabah" oninput="onNasabahInput()" placeholder="Ketik nama nasabah..." autocomplete="off" class="w-full bg-slate-50 border border-slate-200 rounded-lg pl-10 pr-10 py-2.5 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-pnm-navy transition">
-              <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400"></i>
-              <button onclick="clearNasabahSearch()" id="btnClearSearch" class="hidden absolute right-3 top-3 text-slate-400 hover:text-slate-600">
-                <i class="fa-solid fa-xmark"></i>
-              </button>
-            </div>
-            <div id="suggestBox" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-lg shadow-xl z-30 max-h-60 overflow-y-auto custom-scrollbar divide-y divide-slate-100"></div>
-          </div>
+        <div class="w-full md:w-72">
+          <select id="selectBulanOverview" onchange="renderOverviewTab()" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-pnm-navy transition cursor-pointer">
+            <!-- Dynamic Options Tanpa No Urut -->
+          </select>
         </div>
       </div>
 
-      <div id="autoDataCard" class="bg-gradient-to-r from-pnm-navy via-pnm-darknavy to-pnm-navy rounded-xl p-5 text-white shadow-xl border border-blue-900/60 transition-all duration-300">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-blue-800/60 pb-3 mb-4 gap-2">
-          <div class="flex items-center space-x-3">
-            <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>
-            <h3 id="selectedNama" class="font-extrabold text-base sm:text-lg tracking-wide text-white">Informasi Detail Nasabah</h3>
-          </div>
-          <span class="text-[11px] text-blue-200 bg-white/10 px-3 py-1 rounded-full font-semibold self-start sm:self-auto backdrop-blur-sm border border-white/10">Data Nasabah</span>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
-          <div class="bg-white/10 backdrop-blur-md rounded-lg p-3.5 border border-white/10">
-            <p class="text-[10px] uppercase tracking-wider text-blue-200 font-bold mb-1">NOREK PEMBIAYAAN</p>
-            <p id="tabNorek" class="text-sm font-extrabold text-white tracking-wider font-mono">-</p>
-          </div>
-
-          <div class="bg-white/10 backdrop-blur-md rounded-lg p-3.5 border border-white/10">
-            <p class="text-[10px] uppercase tracking-wider text-blue-200 font-bold mb-1">PLAFOND</p>
-            <p id="tabPlafond" class="text-sm font-extrabold text-emerald-400">0</p>
-          </div>
-
-          <div class="bg-white/10 backdrop-blur-md rounded-lg p-3.5 border border-white/10">
-            <p class="text-[10px] uppercase tracking-wider text-blue-200 font-bold mb-1">OUTSTANDING</p>
-            <p id="tabOS" class="text-sm font-extrabold text-amber-300">0</p>
-          </div>
-
-          <div class="bg-white/10 backdrop-blur-md rounded-lg p-3.5 border border-white/10">
-            <p class="text-[10px] uppercase tracking-wider text-blue-200 font-bold mb-1">BRIVA</p>
-            <p id="tabBriva" class="text-sm font-extrabold text-amber-300 tracking-wider font-mono">-</p>
-          </div>
-
-          <div class="bg-white/10 backdrop-blur-md rounded-lg p-3.5 border border-white/10 flex flex-col justify-between">
-            <p class="text-[10px] uppercase tracking-wider text-blue-200 font-bold mb-1">ALAMAT</p>
-            <div id="tabLokasiContainer">
-              <span class="text-xs text-blue-300 italic font-medium">-- AUTO --</span>
-            </div>
-          </div>
-
-          <div class="bg-white/10 backdrop-blur-md rounded-lg p-3.5 border border-white/10 flex flex-col justify-between">
-            <p class="text-[10px] uppercase tracking-wider text-blue-200 font-bold mb-1">KONTAK</p>
-            <div id="tabHpContainer">
-              <span class="text-xs text-blue-300 italic font-medium">-- AUTO -- </span>
-            </div>
-          </div>
-        </div>
+      <!-- CARDS KPI OVERVIEW -->
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4" id="overviewKpiGrid">
+        <!-- JS Render KPI Cards -->
       </div>
 
-      <div class="bg-white/90 backdrop-blur-md rounded-xl card-shadow border border-slate-200/80 overflow-hidden">
-        <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <h3 class="font-bold text-pnm-navy text-base flex items-center gap-2">
-              <i class="fa-solid fa-table-list text-pnm-red"></i> Data Nasabah
-            </h3>
-            <p class="text-xs text-slate-500 mt-0.5">ULaMM UMBULHARJ0</p>
-          </div>
-        </div>
-
-        <div id="topScrollContainer" class="overflow-x-auto custom-scrollbar bg-slate-100/80 border-b border-slate-200" style="height: 12px;">
-          <div id="topScrollDummy" style="height: 12px; width: 1200px;"></div>
-        </div>
-
-        <div id="tableScrollContainer" class="overflow-x-auto custom-scrollbar">
-          <table id="mainTable" class="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr class="bg-pnm-navy text-white uppercase font-bold tracking-wider text-[11px]">
-                <th class="py-3.5 px-4 whitespace-nowrap">NAMA<br><span class="text-blue-200 font-normal"></span></th>
-                <th class="py-3.5 px-4 whitespace-nowrap">NOREK<br><span class="text-blue-200 font-normal"></span></th>
-                <th class="py-3.5 px-4 whitespace-nowrap">PLAFOND<br><span class="text-blue-200 font-normal"></span></th>
-                <th class="py-3.5 px-4 whitespace-nowrap text-right">OUTSTANDING<br><span class="text-blue-200 font-normal"></span></th>
-                <th class="py-3.5 px-4 whitespace-nowrap text-right">SISA DCA<br><span class="text-blue-200 font-normal"></span></th>
-                <th class="py-3.5 px-4 whitespace-nowrap">REALISASI<br><span class="text-blue-200 font-normal"></span></th>
-                <th class="py-3.5 px-4 whitespace-nowrap">TENOR<br><span class="text-blue-200 font-normal"></span></th>
-                <th class="py-3.5 px-4 whitespace-nowrap">JATUH TEMPO<br><span class="text-blue-200 font-normal"></span></th>
-                <th class="py-3.5 px-4 whitespace-nowrap">AGING<br><span class="text-blue-200 font-normal"></span></th>
-                <th class="py-3.5 px-4 whitespace-nowrap">TAGIHAN KE-<br><span class="text-blue-200 font-normal"></span></th>
-                <th class="py-3.5 px-4 whitespace-nowrap">BRIVA<br><span class="text-blue-200 font-normal"></span></th>
-              </tr>
-            </thead>
-            <tbody id="tableBody" class="divide-y divide-slate-100 font-medium">
-              <tr>
-                <td colspan="11" class="py-12 text-center text-slate-400">
-                  <i class="fa-solid fa-spinner fa-spin text-2xl text-pnm-navy mb-2"></i>
-                  <p class="text-xs font-semibold">Loading...</p>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <!-- GRAFIK & TABLE LIST KPI PER BULAN -->
+      <div id="overviewChartsContainer" class="space-y-6">
+        <!-- JS Render Chart & Table Side-by-Side -->
       </div>
+
     </div>
 
-    <div id="tabContentKualitas" class="hidden space-y-6">
+    <!-- TAB CONTENT: MONITORING & KUALITAS -->
+    <div id="tabContentMonitoringKualitas" class="hidden space-y-6">
       
+      <!-- BAGIAN 1: KOMPONEN KUALITAS -->
       <div class="bg-white/90 backdrop-blur-md rounded-xl p-6 card-shadow border border-slate-200/80">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-6">
           <h2 class="text-pnm-navy text-xl font-black uppercase tracking-wider flex items-center gap-2">
@@ -345,8 +204,178 @@
         </div>
       </div>
 
-      <div id="kualitasGridContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div id="kualitasGridContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+
+      <!-- BAGIAN 2: KOMPONEN MONITORING -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 pt-4">
+        <div class="bg-white/90 backdrop-blur-md rounded-xl p-5 card-shadow border border-slate-200/80 flex items-center justify-between relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5">
+          <div class="absolute top-0 left-0 w-1.5 h-full bg-slate-600"></div>
+          <div class="pl-2">
+            <div class="flex items-center gap-2 mb-1">
+              <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">TOTAL BEBAN</p>
+              <span id="noaTotalBeban" class="text-[10px] font-extrabold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full border border-slate-200">NOA: 0</span>
+            </div>
+            <h3 id="cardTotalBeban" class="text-2xl font-black text-slate-800">0</h3>
+            <p class="text-[11px] text-slate-500 mt-1">Based On Closing Bulan Lalu</p>
+          </div>
+          <div class="w-12 h-12 bg-slate-100 text-slate-700 rounded-xl flex items-center justify-center text-xl font-bold shadow-inner">
+            <i class="fa-solid fa-vault"></i>
+          </div>
         </div>
+
+        <div class="bg-white/90 backdrop-blur-md rounded-xl p-5 card-shadow border border-slate-200/80 flex items-center justify-between relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5">
+          <div class="absolute top-0 left-0 w-1.5 h-full bg-pnm-navy"></div>
+          <div class="pl-2">
+            <div class="flex items-center gap-2 mb-1">
+              <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">SISA BEBAN</p>
+              <span id="noaSisaBeban" class="text-[10px] font-extrabold bg-blue-50 text-pnm-navy px-2 py-0.5 rounded-full border border-blue-100">NOA: 0</span>
+            </div>
+            <h3 id="cardSisaBeban" class="text-2xl font-black text-pnm-navy">0</h3>
+            <p class="text-[11px] text-slate-500 mt-1">Sisa Beban Bulan Berjalan</p>
+          </div>
+          <div class="w-12 h-12 bg-blue-50 text-pnm-navy rounded-xl flex items-center justify-center text-xl font-bold shadow-inner">
+            <i class="fa-solid fa-scale-balanced"></i>
+          </div>
+        </div>
+
+        <div class="bg-white/90 backdrop-blur-md rounded-xl p-5 card-shadow border border-slate-200/80 flex items-center justify-between relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5">
+          <div class="absolute top-0 left-0 w-1.5 h-full bg-pnm-red"></div>
+          <div class="pl-2">
+            <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">SUCCSES RATE</p>
+            <h3 id="cardSCR" class="text-2xl font-black text-pnm-red">0.00%</h3>
+            <p class="text-[11px] text-slate-500 mt-1"></p>
+          </div>
+          <div class="w-12 h-12 bg-red-50 text-pnm-red rounded-xl flex items-center justify-center text-xl font-bold shadow-inner">
+            <i class="fa-solid fa-bullseye"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- FILTER BOX -->
+      <div class="bg-white/90 backdrop-blur-md rounded-xl p-5 card-shadow border border-slate-200/80 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <h2 class="text-sm font-bold text-pnm-navy flex items-center gap-2 tracking-wide uppercase">
+            <i class="fa-solid fa-filter text-pnm-red"></i> Filter Kolektibilitas & Pencarian Data Nasabah 
+          </h2>
+          <span id="recordCount" class="text-xs font-bold bg-slate-100 text-slate-600 px-3 py-1 rounded-full border border-slate-200">0 Number of Account</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-2">
+              Kolektibilitas (Filter Utama)
+            </label>
+            <select id="selectKolek" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-pnm-navy transition cursor-pointer">
+              <option value="">-- SEMUA KOLEKTIBILITAS --</option>
+            </select>
+          </div>
+
+          <div class="relative">
+            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-2">
+              Nama Nasabah (Filter Khusus Tabel & Detail)
+            </label>
+            <div class="relative">
+              <input type="text" id="inputNasabah" oninput="onNasabahInput()" placeholder="Ketik nama nasabah..." autocomplete="off" class="w-full bg-slate-50 border border-slate-200 rounded-lg pl-10 pr-10 py-2.5 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-pnm-navy transition">
+              <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400"></i>
+              <button onclick="clearNasabahSearch()" id="btnClearSearch" class="hidden absolute right-3 top-3 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            <div id="suggestBox" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-lg shadow-xl z-30 max-h-60 overflow-y-auto custom-scrollbar divide-y divide-slate-100"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AUTO DATA CARD NASABAH -->
+      <div id="autoDataCard" class="bg-gradient-to-r from-pnm-navy via-pnm-darknavy to-pnm-navy rounded-xl p-5 text-white shadow-xl border border-blue-900/60 transition-all duration-300">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-blue-800/60 pb-3 mb-4 gap-2">
+          <div class="flex items-center space-x-3">
+            <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>
+            <h3 id="selectedNama" class="font-extrabold text-base sm:text-lg tracking-wide text-white">Informasi Detail Nasabah</h3>
+          </div>
+          <span class="text-[11px] text-blue-200 bg-white/10 px-3 py-1 rounded-full font-semibold self-start sm:self-auto backdrop-blur-sm border border-white/10">Data Nasabah</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+          <div class="bg-white/10 backdrop-blur-md rounded-lg p-3.5 border border-white/10">
+            <p class="text-[10px] uppercase tracking-wider text-blue-200 font-bold mb-1">NOREK PEMBIAYAAN</p>
+            <p id="tabNorek" class="text-sm font-extrabold text-white tracking-wider font-mono">-</p>
+          </div>
+
+          <div class="bg-white/10 backdrop-blur-md rounded-lg p-3.5 border border-white/10">
+            <p class="text-[10px] uppercase tracking-wider text-blue-200 font-bold mb-1">PLAFOND</p>
+            <p id="tabPlafond" class="text-sm font-extrabold text-emerald-400">0</p>
+          </div>
+
+          <div class="bg-white/10 backdrop-blur-md rounded-lg p-3.5 border border-white/10">
+            <p class="text-[10px] uppercase tracking-wider text-blue-200 font-bold mb-1">OUTSTANDING</p>
+            <p id="tabOS" class="text-sm font-extrabold text-amber-300">0</p>
+          </div>
+
+          <div class="bg-white/10 backdrop-blur-md rounded-lg p-3.5 border border-white/10">
+            <p class="text-[10px] uppercase tracking-wider text-blue-200 font-bold mb-1">BRIVA</p>
+            <p id="tabBriva" class="text-sm font-extrabold text-amber-300 tracking-wider font-mono">-</p>
+          </div>
+
+          <div class="bg-white/10 backdrop-blur-md rounded-lg p-3.5 border border-white/10 flex flex-col justify-between">
+            <p class="text-[10px] uppercase tracking-wider text-blue-200 font-bold mb-1">ALAMAT</p>
+            <div id="tabLokasiContainer">
+              <span class="text-xs text-blue-300 italic font-medium">-- AUTO --</span>
+            </div>
+          </div>
+
+          <div class="bg-white/10 backdrop-blur-md rounded-lg p-3.5 border border-white/10 flex flex-col justify-between">
+            <p class="text-[10px] uppercase tracking-wider text-blue-200 font-bold mb-1">KONTAK</p>
+            <div id="tabHpContainer">
+              <span class="text-xs text-blue-300 italic font-medium">-- AUTO -- </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABLE MONITORING DATA -->
+      <div class="bg-white/90 backdrop-blur-md rounded-xl card-shadow border border-slate-200/80 overflow-hidden">
+        <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h3 class="font-bold text-pnm-navy text-base flex items-center gap-2">
+              <i class="fa-solid fa-table-list text-pnm-red"></i> Data Nasabah
+            </h3>
+            <p class="text-xs text-slate-500 mt-0.5">ULaMM UMBULHARJO</p>
+          </div>
+        </div>
+
+        <div id="topScrollContainer" class="overflow-x-auto custom-scrollbar bg-slate-100/80 border-b border-slate-200" style="height: 12px;">
+          <div id="topScrollDummy" style="height: 12px; width: 1200px;"></div>
+        </div>
+
+        <div id="tableScrollContainer" class="overflow-x-auto custom-scrollbar">
+          <table id="mainTable" class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-pnm-navy text-white uppercase font-bold tracking-wider text-[11px]">
+                <th class="py-3.5 px-4 whitespace-nowrap">NAMA</th>
+                <th class="py-3.5 px-4 whitespace-nowrap">NOREK</th>
+                <th class="py-3.5 px-4 whitespace-nowrap">PLAFOND</th>
+                <th class="py-3.5 px-4 whitespace-nowrap text-right">OUTSTANDING</th>
+                <th class="py-3.5 px-4 whitespace-nowrap text-right">SISA DCA</th>
+                <th class="py-3.5 px-4 whitespace-nowrap">REALISASI</th>
+                <th class="py-3.5 px-4 whitespace-nowrap">TENOR</th>
+                <th class="py-3.5 px-4 whitespace-nowrap">JATUH TEMPO</th>
+                <th class="py-3.5 px-4 whitespace-nowrap">AGING</th>
+                <th class="py-3.5 px-4 whitespace-nowrap">TAGIHAN KE-</th>
+                <th class="py-3.5 px-4 whitespace-nowrap">BRIVA</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody" class="divide-y divide-slate-100 font-medium">
+              <tr>
+                <td colspan="11" class="py-12 text-center text-slate-400">
+                  <i class="fa-solid fa-spinner fa-spin text-2xl text-pnm-navy mb-2"></i>
+                  <p class="text-xs font-semibold">Loading...</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
   </main>
@@ -364,33 +393,117 @@
     let rawOptions = [];
     let rawDatabase = [];
     let rawBasedon = [];
+    let rawResume = [];
     let filteredDatabase = [];
+    let chartInstances = {};
 
-    // Tab Switcher Logic
+    const currentYear = new Date().getFullYear();
+    const prevYear = currentYear - 1;
+
+    const MONTH_LABELS = [
+      `Desember ${prevYear}`,
+      `Januari ${currentYear}`,
+      `Februari ${currentYear}`,
+      `Maret ${currentYear}`,
+      `April ${currentYear}`,
+      `Mei ${currentYear}`,
+      `Juni ${currentYear}`,
+      `Juli ${currentYear}`,
+      `Agustus ${currentYear}`,
+      `September ${currentYear}`,
+      `Oktober ${currentYear}`,
+      `November ${currentYear}`,
+      `Desember ${currentYear}`
+    ];
+
+    const CHART_X_LABELS = [
+      `DES ${String(prevYear).slice(-2)}`,
+      `JAN ${String(currentYear).slice(-2)}`,
+      `FEB ${String(currentYear).slice(-2)}`,
+      `MAR ${String(currentYear).slice(-2)}`,
+      `APR ${String(currentYear).slice(-2)}`,
+      `MEI ${String(currentYear).slice(-2)}`,
+      `JUN ${String(currentYear).slice(-2)}`,
+      `JUL ${String(currentYear).slice(-2)}`,
+      `AGT ${String(currentYear).slice(-2)}`,
+      `SEP ${String(currentYear).slice(-2)}`,
+      `OKT ${String(currentYear).slice(-2)}`,
+      `NOV ${String(currentYear).slice(-2)}`,
+      `DES ${String(currentYear).slice(-2)}`
+    ];
+
+    const OVERVIEW_KPIS = [
+      { key: 'noa', label: 'NOA', hasChart: true },
+      { key: 'os', label: 'OUTSTANDING', hasChart: true },
+      { key: 'lending', label: 'LENDING', hasChart: true },
+      { key: 'revenue', label: 'REVENUE', hasChart: true },
+      { key: 'lar', label: 'LAR', hasChart: true },
+      { key: 'npl', label: 'NPL', hasChart: true },
+      { key: 'runoff', label: 'RUN OFF', hasChart: false },
+      { key: 'carryover', label: 'CARRY OVER', hasChart: false },
+      { key: 'fpd', label: 'LAR FPD', hasChart: false },
+      { key: 'kol1a', label: 'KOL 1A', hasChart: true },
+      { key: 'r3', label: '3R', hasChart: false },
+      { key: 'potensi_npl', label: 'POTENSI NPL', hasChart: false }
+    ];
+
+    function formatNumber(num) {
+      if (isNaN(num) || num === null) return "0";
+      return new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(Math.round(num));
+    }
+
+    function formatPercent(num) {
+      if (isNaN(num) || num === null) return "0.00%";
+      return num.toFixed(2) + "%";
+    }
+
+    function calculateTrendline(dataArray, maxIdx) {
+      const validPoints = [];
+      for (let i = 0; i <= maxIdx; i++) {
+        validPoints.push({ x: i, y: dataArray[i] || 0 });
+      }
+      
+      const n = validPoints.length;
+      if (n <= 1) return dataArray.map(() => (dataArray[0] || 0));
+
+      let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
+      validPoints.forEach(pt => {
+        sumX += pt.x;
+        sumY += pt.y;
+        sumXY += (pt.x * pt.y);
+        sumXX += (pt.x * pt.x);
+      });
+
+      const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+      const intercept = (sumY - slope * sumX) / n;
+
+      return dataArray.map((_, idx) => (slope * idx + intercept));
+    }
+
     function switchTab(tabName) {
-      const btnMon = document.getElementById('btnTabMonitoring');
-      const btnKual = document.getElementById('btnTabKualitas');
-      const contentMon = document.getElementById('tabContentMonitoring');
-      const contentKual = document.getElementById('tabContentKualitas');
+      const btnOv = document.getElementById('btnTabOverview');
+      const btnMonKual = document.getElementById('btnTabMonitoringKualitas');
+      
+      const contentOv = document.getElementById('tabContentOverview');
+      const contentMonKual = document.getElementById('tabContentMonitoringKualitas');
 
-      if (tabName === 'monitoring') {
-        contentMon.classList.remove('hidden');
-        contentKual.classList.add('hidden');
+      [contentOv, contentMonKual].forEach(el => el.classList.add('hidden'));
+      [btnOv, btnMonKual].forEach(btn => {
+        btn.className = "px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-transparent text-slate-500 hover:text-pnm-navy hover:bg-white/50";
+      });
 
-        btnMon.className = "px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-pnm-navy bg-white text-pnm-navy shadow-sm";
-        btnKual.className = "px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-transparent text-slate-500 hover:text-pnm-navy hover:bg-white/50";
+      if (tabName === 'overview') {
+        contentOv.classList.remove('hidden');
+        btnOv.className = "px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-pnm-navy bg-white text-pnm-navy shadow-sm";
+        renderOverviewTab();
       } else {
-        contentMon.classList.add('hidden');
-        contentKual.classList.remove('hidden');
-
-        btnKual.className = "px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-pnm-navy bg-white text-pnm-navy shadow-sm";
-        btnMon.className = "px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-transparent text-slate-500 hover:text-pnm-navy hover:bg-white/50";
-        
+        contentMonKual.classList.remove('hidden');
+        btnMonKual.className = "px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-pnm-navy bg-white text-pnm-navy shadow-sm";
         renderKualitasTab();
+        applyFilters();
       }
     }
 
-    // Format Tanggal ke DD-MMM-YYYY (misal: 31-Jan-2030)
     function formatDateCustom(val) {
       if (!val) return '-';
       let d;
@@ -401,13 +514,9 @@
       }
       if (isNaN(d.getTime())) return String(val);
       const months = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agt", "Sep", "Okt", "Nov", "Des"];
-      const day = String(d.getDate()).padStart(2, '0');
-      const month = months[d.getMonth()];
-      const year = d.getFullYear();
-      return `${day}-${month}-${year}`;
+      return `${String(d.getDate()).padStart(2, '0')}-${months[d.getMonth()]}-${d.getFullYear()}`;
     }
 
-    // Synchronize Top & Bottom Scrollbars
     function setupDoubleScroll() {
       const topScroll = document.getElementById('topScrollContainer');
       const bottomScroll = document.getElementById('tableScrollContainer');
@@ -415,59 +524,52 @@
       const table = document.getElementById('mainTable');
 
       if (!topScroll || !bottomScroll || !topDummy || !table) return;
+      topDummy.style.width = table.scrollWidth + 'px';
 
-      function updateDummyWidth() {
-        topDummy.style.width = table.scrollWidth + 'px';
-      }
+      let isSyncingTop = false, isSyncingBottom = false;
 
-      updateDummyWidth();
-      window.addEventListener('resize', updateDummyWidth);
-
-      let isSyncingTop = false;
-      let isSyncingBottom = false;
-
-      topScroll.addEventListener('scroll', () => {
+      topScroll.onscroll = () => {
         if (!isSyncingTop) {
           isSyncingBottom = true;
           bottomScroll.scrollLeft = topScroll.scrollLeft;
         }
         isSyncingTop = false;
-      });
-
-      bottomScroll.addEventListener('scroll', () => {
+      };
+      bottomScroll.onscroll = () => {
         if (!isSyncingBottom) {
           isSyncingTop = true;
           topScroll.scrollLeft = bottomScroll.scrollLeft;
         }
         isSyncingBottom = false;
-      });
+      };
     }
 
-    // Currency Formatter dengan pemisah titik (bold tegas)
-    function formatNumber(num) {
-      if (isNaN(num) || num === null) return "0";
-      return new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(num);
-    }
-
-    // Format WhatsApp Link
     function formatWaLink(phoneRaw) {
       if (!phoneRaw) return null;
       let cleaned = String(phoneRaw).replace(/[^0-9]/g, '');
-      if (cleaned.startsWith('0')) {
-        cleaned = '62' + cleaned.substring(1);
-      }
+      if (cleaned.startsWith('0')) cleaned = '62' + cleaned.substring(1);
       return `https://wa.me/${cleaned}`;
     }
 
-    // Tampilan Tanggal
     function initDate() {
       const now = new Date();
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      document.getElementById('dateDisplay').innerText = now.toLocaleDateString('id-ID', options);
+      document.getElementById('dateDisplay').innerText = now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     }
     initDate();
 
-    // Fetch Data
+    function populateMonthDropdown() {
+      const select = document.getElementById('selectBulanOverview');
+      select.innerHTML = '';
+      MONTH_LABELS.forEach((label, idx) => {
+        const opt = document.createElement('option');
+        opt.value = idx + 1;
+        opt.textContent = label;
+        select.appendChild(opt);
+      });
+      select.value = "13";
+    }
+    populateMonthDropdown();
+
     function initData() {
       if (typeof google !== 'undefined' && google.script && google.script.run) {
         google.script.run.withSuccessHandler(onDataLoaded).getAllData();
@@ -475,16 +577,7 @@
         fetch(APPS_SCRIPT_URL + "?action=getData")
           .then(res => res.json())
           .then(data => onDataLoaded(data))
-          .catch(err => {
-            console.error("Gagal memuat data via API:", err);
-            document.getElementById('tableBody').innerHTML = `
-              <tr>
-                <td colspan="11" class="py-8 text-center text-red-500 font-bold">
-                  Gagal terhubung ke Apps Script Backend.<br>
-                  <span class="text-xs font-normal text-slate-500">Pastikan URL Apps Script sudah diisi dan akses diset ke 'Anyone'.</span>
-                </td>
-              </tr>`;
-          });
+          .catch(err => console.error("Gagal memuat data via API:", err));
       }
     }
 
@@ -494,8 +587,8 @@
       rawOptions = res.kolektibilitasOptions || [];
       rawDatabase = res.database || [];
       rawBasedon = res.basedon || [];
+      rawResume = res.resume || [];
 
-      // Populate Dropdown Options
       const selectKolek = document.getElementById('selectKolek');
       selectKolek.innerHTML = '<option value="">-- SEMUA KOLEKTIBILITAS --</option>';
       rawOptions.forEach(opt => {
@@ -505,41 +598,480 @@
         selectKolek.appendChild(optionEl);
       });
 
-      applyFilters();
-      setupDoubleScroll();
+      renderOverviewTab();
       renderKualitasTab();
+      applyFilters();
     }
 
-    // Logika Filtering Kolektibilitas
+    // ================= OVERVIEW TAB LOGIC =================
+    function renderOverviewTab() {
+      if (!rawResume || rawResume.length === 0) return;
+
+      const monthIndex = parseInt(document.getElementById('selectBulanOverview').value) - 1;
+      const currentResumeRow = rawResume[monthIndex] || rawResume[0];
+
+      const kpiGrid = document.getElementById('overviewKpiGrid');
+      kpiGrid.innerHTML = '';
+
+      OVERVIEW_KPIS.forEach(kpi => {
+        const item = currentResumeRow[kpi.key] || {};
+        const real = item.realisasi || 0;
+        const rkap = item.rkap || 0;
+        
+        const card = document.createElement('div');
+        card.className = "bg-white/90 backdrop-blur-md rounded-xl p-3.5 card-shadow border border-slate-200/80 relative overflow-hidden flex flex-col justify-between transition hover:-translate-y-0.5";
+
+        let contentHTML = '';
+
+        if (kpi.key === 'noa') {
+          const newNoa = item.newNoa || 0;
+          const outNoa = item.outNoa || 0;
+
+          contentHTML = `
+            <div>
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-[10px] font-black tracking-wider text-slate-400 uppercase truncate">${kpi.label}</span>
+              </div>
+              <h3 class="text-xl sm:text-2xl font-black text-pnm-navy mt-1 truncate">${formatNumber(real)}</h3>
+            </div>
+            <div class="mt-2 pt-1.5 border-t border-slate-100 flex justify-between text-[9px] font-semibold text-slate-500">
+              <div>NEW: <span class="font-bold text-slate-700">${formatNumber(newNoa)}</span></div>
+              <div>OUT: <span class="font-bold text-slate-700">${formatNumber(outNoa)}</span></div>
+            </div>
+          `;
+        } else if (kpi.key === 'fpd') {
+          // KETERANGAN NOA SAMA DENGAN 3R & WARNA ANGKA MERAH (BELUM 0) / HIJAU (SUDAH 0)
+          const noaBU = item.noa || 0;
+          const textFpdColor = real === 0 ? 'text-emerald-600' : 'text-pnm-red';
+
+          contentHTML = `
+            <div>
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-[9px] font-black tracking-wider text-slate-400 uppercase truncate">${kpi.label}</span>
+                <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded shrink-0 bg-blue-100 text-pnm-navy">
+                  ${formatNumber(noaBU)} NOA
+                </span>
+              </div>
+              <h3 class="text-base font-black ${textFpdColor} mt-1 truncate">${formatNumber(real)}</h3>
+            </div>
+            <div class="mt-2 pt-1.5 border-t border-slate-100 flex justify-between text-[9px] font-semibold text-slate-500">
+              <span>TOT BEBAN:</span>
+              <span class="font-bold text-slate-700">${formatNumber(real)}</span>
+            </div>
+          `;
+        } else if (kpi.key === 'lar') {
+          const noaAD = item.noa || 0;
+          const pct = rkap > 0 ? (real / rkap) * 100 : 0;
+          const badgeClass = real <= rkap ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-pnm-red';
+
+          contentHTML = `
+            <div>
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-[9px] font-black tracking-wider text-slate-400 uppercase truncate">${kpi.label}</span>
+                <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded shrink-0 ${badgeClass}">
+                  ${formatPercent(pct)}
+                </span>
+              </div>
+              <h3 class="text-base font-black text-pnm-navy mt-1 truncate">${formatNumber(real)}</h3>
+            </div>
+            <div class="mt-2 pt-1.5 border-t border-slate-100 space-y-0.5 text-[9px] font-semibold text-slate-500">
+              <div class="flex justify-between">
+                <span>RKAP:</span>
+                <span class="font-bold text-slate-700">${formatNumber(rkap)}</span>
+              </div>
+              <div class="flex justify-between text-[8.5px]">
+                <span>NOA:</span>
+                <span class="font-bold text-pnm-navy">${formatNumber(noaAD)}</span>
+              </div>
+            </div>
+          `;
+        } else if (kpi.key === 'npl') {
+          const noaAK = item.noa || 0;
+          const pct = rkap > 0 ? (real / rkap) * 100 : 0;
+          const badgeClass = real <= rkap ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-pnm-red';
+
+          contentHTML = `
+            <div>
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-[9px] font-black tracking-wider text-slate-400 uppercase truncate">${kpi.label}</span>
+                <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded shrink-0 ${badgeClass}">
+                  ${formatPercent(pct)}
+                </span>
+              </div>
+              <h3 class="text-base font-black text-pnm-navy mt-1 truncate">${formatNumber(real)}</h3>
+            </div>
+            <div class="mt-2 pt-1.5 border-t border-slate-100 space-y-0.5 text-[9px] font-semibold text-slate-500">
+              <div class="flex justify-between">
+                <span>RKAP:</span>
+                <span class="font-bold text-slate-700">${formatNumber(rkap)}</span>
+              </div>
+              <div class="flex justify-between text-[8.5px]">
+                <span>NOA:</span>
+                <span class="font-bold text-pnm-navy">${formatNumber(noaAK)}</span>
+              </div>
+            </div>
+          `;
+        } else if (kpi.key === 'potensi_npl') {
+          // WARNA ANGKA MERAH (BELUM 0) / HIJAU (SUDAH 0)
+          const totalBebanBN = item.totalBeban || 0;
+          const noaBP = item.noa || 0;
+          const textPotensiColor = real === 0 ? 'text-emerald-600' : 'text-pnm-red';
+
+          contentHTML = `
+            <div>
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-[9px] font-black tracking-wider text-slate-400 uppercase truncate">${kpi.label}</span>
+                <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded shrink-0 bg-blue-100 text-pnm-navy">
+                  ${formatNumber(noaBP)} NOA
+                </span>
+              </div>
+              <h3 class="text-base font-black ${textPotensiColor} mt-1 truncate">${formatNumber(real)}</h3>
+            </div>
+            <div class="mt-2 pt-1.5 border-t border-slate-100 flex justify-between text-[9px] font-semibold text-slate-500">
+              <span>TOT BEBAN:</span>
+              <span class="font-bold text-slate-700">${formatNumber(totalBebanBN)}</span>
+            </div>
+          `;
+        } else if (kpi.key === 'os') {
+          const diff = real - rkap;
+          const pct = rkap > 0 ? (real / rkap) * 100 : 0;
+          const badgeClass = pct >= 100 ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-pnm-red';
+          const diffSign = diff >= 0 ? '+' : '';
+
+          contentHTML = `
+            <div>
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-[9px] font-black tracking-wider text-slate-400 uppercase truncate">${kpi.label}</span>
+                <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded shrink-0 ${badgeClass}">
+                  ${formatPercent(pct)}
+                </span>
+              </div>
+              <h3 class="text-base font-black text-pnm-navy mt-1 truncate">${formatNumber(real)}</h3>
+            </div>
+            <div class="mt-2 pt-1.5 border-t border-slate-100 space-y-0.5 text-[9px] font-semibold text-slate-500">
+              <div class="flex justify-between">
+                <span>RKAP:</span>
+                <span class="font-bold text-slate-700">${formatNumber(rkap)}</span>
+              </div>
+              <div class="flex justify-between text-[8.5px]">
+                <span>SELISIH:</span>
+                <span class="font-bold ${diff >= 0 ? 'text-emerald-600' : 'text-pnm-red'}">${diffSign}${formatNumber(diff)}</span>
+              </div>
+            </div>
+          `;
+        } else if (kpi.key === 'lending') {
+          const noaW = item.noa || 0;
+          const pct = rkap > 0 ? (real / rkap) * 100 : 0;
+          const badgeClass = pct >= 100 ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-pnm-red';
+
+          contentHTML = `
+            <div>
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-[9px] font-black tracking-wider text-slate-400 uppercase truncate">${kpi.label}</span>
+                <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded shrink-0 ${badgeClass}">
+                  ${formatPercent(pct)}
+                </span>
+              </div>
+              <h3 class="text-base font-black text-pnm-navy mt-1 truncate">${formatNumber(real)}</h3>
+            </div>
+            <div class="mt-2 pt-1.5 border-t border-slate-100 space-y-0.5 text-[9px] font-semibold text-slate-500">
+              <div class="flex justify-between">
+                <span>RKAP:</span>
+                <span class="font-bold text-slate-700">${formatNumber(rkap)}</span>
+              </div>
+              <div class="flex justify-between text-[8.5px]">
+                <span>NOA:</span>
+                <span class="font-bold text-pnm-navy">${formatNumber(noaW)}</span>
+              </div>
+            </div>
+          `;
+        } else if (kpi.key === 'runoff') {
+          contentHTML = `
+            <div>
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-[9px] font-black tracking-wider text-slate-400 uppercase truncate">${kpi.label}</span>
+              </div>
+              <h3 class="text-base font-black text-pnm-navy mt-2 truncate">${formatNumber(real)}</h3>
+            </div>
+            <div class="mt-3 pt-1 border-t border-slate-100 text-[9px] text-slate-400 font-medium italic">
+              *Closing Data
+            </div>
+          `;
+        } else if (kpi.key === 'carryover') {
+          contentHTML = `
+            <div>
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-[9px] font-black tracking-wider text-slate-400 uppercase truncate">${kpi.label}</span>
+              </div>
+              <h3 class="text-base font-black text-pnm-navy mt-2 truncate">${formatNumber(real)}</h3>
+            </div>
+            <div class="mt-3 pt-1 border-t border-slate-100 text-[9px] text-slate-400 font-medium italic">
+              *Carry Over Value
+            </div>
+          `;
+        } else if (kpi.key === 'r3') {
+          // WARNA ANGKA MERAH (BELUM 0) / HIJAU (SUDAH 0)
+          const tb = item.totalBeban || 0;
+          const noaAX = item.noa || 0;
+          const textR3Color = real === 0 ? 'text-emerald-600' : 'text-pnm-red';
+
+          contentHTML = `
+            <div>
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-[9px] font-black tracking-wider text-slate-400 uppercase truncate">${kpi.label}</span>
+                <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded shrink-0 bg-blue-100 text-pnm-navy">
+                  ${formatNumber(noaAX)} NOA
+                </span>
+              </div>
+              <h3 class="text-base font-black ${textR3Color} mt-1 truncate">${formatNumber(real)}</h3>
+            </div>
+            <div class="mt-2 pt-1.5 border-t border-slate-100 flex justify-between text-[9px] font-semibold text-slate-500">
+              <span>TOT BEBAN:</span>
+              <span class="font-bold text-slate-700">${formatNumber(tb)}</span>
+            </div>
+          `;
+        } else {
+          const pct = rkap > 0 ? (real / rkap) * 100 : 0;
+          const isGood = (pct >= 100);
+          const badgeClass = isGood ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-pnm-red';
+
+          contentHTML = `
+            <div>
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-[9px] font-black tracking-wider text-slate-400 uppercase truncate">${kpi.label}</span>
+                <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded shrink-0 ${badgeClass}">
+                  ${formatPercent(pct)}
+                </span>
+              </div>
+              <h3 class="text-base font-black text-pnm-navy mt-1 truncate">${formatNumber(real)}</h3>
+            </div>
+            <div class="mt-2 pt-1.5 border-t border-slate-100 flex justify-between text-[9px] font-semibold text-slate-500">
+              <span>RKAP:</span>
+              <span class="font-bold text-slate-700">${formatNumber(rkap)}</span>
+            </div>
+          `;
+        }
+
+        card.innerHTML = contentHTML;
+        kpiGrid.appendChild(card);
+      });
+
+      const chartsContainer = document.getElementById('overviewChartsContainer');
+      chartsContainer.innerHTML = '';
+
+      // Render Grafik & Tabel Perkembangan Bulanan
+      OVERVIEW_KPIS.filter(kpi => kpi.hasChart).forEach(kpi => {
+        const section = document.createElement('div');
+        section.className = "bg-white/90 backdrop-blur-md rounded-xl p-5 card-shadow border border-slate-200/80 space-y-4";
+        
+        const canvasId = `chart_${kpi.key}`;
+
+        if (kpi.key === 'noa') {
+          section.innerHTML = `
+            <div class="border-b border-slate-100 pb-2 flex justify-between items-center">
+              <h3 class="text-sm font-black text-pnm-navy tracking-wide uppercase flex items-center gap-2">
+                <i class="fa-solid fa-chart-line text-pnm-cyan"></i> KPI ${kpi.label} PER BULAN
+              </h3>
+              <span class="text-[10px] font-bold bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full">${CHART_X_LABELS[0]} s/d ${CHART_X_LABELS[12]}</span>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+              <div class="lg:col-span-7 h-64 relative">
+                <canvas id="${canvasId}"></canvas>
+              </div>
+              
+              <div class="lg:col-span-5 overflow-x-auto custom-scrollbar max-h-64 border border-slate-100 rounded-lg">
+                <table class="w-full text-left border-collapse text-[11px]">
+                  <thead class="bg-pnm-navy text-white font-bold sticky top-0">
+                    <tr>
+                      <th class="py-2 px-2.5">BULAN</th>
+                      <th class="py-2 px-2.5 text-right">NEW</th>
+                      <th class="py-2 px-2.5 text-right">OUT</th>
+                      <th class="py-2 px-2.5 text-right">EXISTING</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100 font-medium">
+                    ${MONTH_LABELS.map((bName, idx) => {
+                      const rData = (rawResume[idx] && rawResume[idx]['noa']) ? rawResume[idx]['noa'] : { newNoa: 0, outNoa: 0, realisasi: 0 };
+                      const isSelected = (idx === monthIndex);
+
+                      return `
+                        <tr class="${isSelected ? 'bg-blue-50/80 font-bold text-pnm-navy' : 'hover:bg-slate-50'}">
+                          <td class="py-1.5 px-2.5">${bName}</td>
+                          <td class="py-1.5 px-2.5 text-right font-semibold text-emerald-600">${formatNumber(rData.newNoa)}</td>
+                          <td class="py-1.5 px-2.5 text-right font-semibold text-pnm-red">${formatNumber(rData.outNoa)}</td>
+                          <td class="py-1.5 px-2.5 text-right font-extrabold text-pnm-navy">${formatNumber(rData.realisasi)}</td>
+                        </tr>
+                      `;
+                    }).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          `;
+        } else {
+          const realisasiColHeader = (kpi.key === 'lar' || kpi.key === 'npl') ? 'BEBAN' : 'REALISASI';
+
+          section.innerHTML = `
+            <div class="border-b border-slate-100 pb-2 flex justify-between items-center">
+              <h3 class="text-sm font-black text-pnm-navy tracking-wide uppercase flex items-center gap-2">
+                <i class="fa-solid fa-chart-line text-pnm-cyan"></i> KPI ${kpi.label} PER BULAN
+              </h3>
+              <span class="text-[10px] font-bold bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full">${CHART_X_LABELS[0]} s/d ${CHART_X_LABELS[12]}</span>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+              <div class="lg:col-span-7 h-64 relative">
+                <canvas id="${canvasId}"></canvas>
+              </div>
+              
+              <div class="lg:col-span-5 overflow-x-auto custom-scrollbar max-h-64 border border-slate-100 rounded-lg">
+                <table class="w-full text-left border-collapse text-[11px]">
+                  <thead class="bg-pnm-navy text-white font-bold sticky top-0">
+                    <tr>
+                      <th class="py-2 px-2.5">BULAN</th>
+                      <th class="py-2 px-2.5 text-right">RKAP</th>
+                      <th class="py-2 px-2.5 text-right">${realisasiColHeader}</th>
+                      <th class="py-2 px-2.5 text-right">% ACHIEVE</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100 font-medium">
+                    ${MONTH_LABELS.map((bName, idx) => {
+                      const rData = (rawResume[idx] && rawResume[idx][kpi.key]) ? rawResume[idx][kpi.key] : { rkap: 0, realisasi: 0 };
+                      const rkapVal = rData.rkap || 0;
+                      const realVal = rData.realisasi || 0;
+                      const pctVal = rkapVal > 0 ? (realVal / rkapVal) * 100 : 0;
+                      const isSelected = (idx === monthIndex);
+
+                      const isInverse = (kpi.key === 'lar' || kpi.key === 'npl');
+                      let isGood = isInverse ? (realVal <= rkapVal) : (pctVal >= 100);
+                      const textColor = isGood ? 'text-emerald-600' : 'text-pnm-red';
+
+                      return `
+                        <tr class="${isSelected ? 'bg-blue-50/80 font-bold text-pnm-navy' : 'hover:bg-slate-50'}">
+                          <td class="py-1.5 px-2.5">${bName}</td>
+                          <td class="py-1.5 px-2.5 text-right">${formatNumber(rkapVal)}</td>
+                          <td class="py-1.5 px-2.5 text-right font-semibold">${formatNumber(realVal)}</td>
+                          <td class="py-1.5 px-2.5 text-right font-extrabold ${textColor}">${formatPercent(pctVal)}</td>
+                        </tr>
+                      `;
+                    }).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          `;
+        }
+
+        chartsContainer.appendChild(section);
+
+        setTimeout(() => {
+          const ctx = document.getElementById(canvasId).getContext('2d');
+          
+          let datasetsArr = [];
+
+          if (kpi.key === 'noa') {
+            const newSeries = MONTH_LABELS.map((_, idx) => (rawResume[idx] && rawResume[idx].noa) ? rawResume[idx].noa.newNoa : 0);
+            const outSeries = MONTH_LABELS.map((_, idx) => (rawResume[idx] && rawResume[idx].noa) ? rawResume[idx].noa.outNoa : 0);
+            const existingSeries = MONTH_LABELS.map((_, idx) => (rawResume[idx] && rawResume[idx].noa) ? rawResume[idx].noa.realisasi : 0);
+
+            datasetsArr = [
+              {
+                label: 'NEW (C)',
+                data: newSeries,
+                borderColor: '#8DC63F',
+                backgroundColor: 'rgba(141, 198, 63, 0.1)',
+                tension: 0.2
+              },
+              {
+                label: 'OUT (E)',
+                data: outSeries,
+                borderColor: '#E31E24',
+                backgroundColor: 'rgba(227, 30, 36, 0.1)',
+                tension: 0.2
+              },
+              {
+                label: 'EXISTING (D)',
+                data: existingSeries,
+                borderColor: '#002B66',
+                backgroundColor: 'rgba(0, 43, 102, 0.08)',
+                fill: true,
+                tension: 0.2
+              }
+            ];
+          } else {
+            const rkapSeries = MONTH_LABELS.map((_, idx) => (rawResume[idx] && rawResume[idx][kpi.key]) ? (rawResume[idx][kpi.key].rkap || 0) : 0);
+            const realSeries = MONTH_LABELS.map((_, idx) => (rawResume[idx] && rawResume[idx][kpi.key]) ? rawResume[idx][kpi.key].realisasi : 0);
+            const trendSeries = calculateTrendline(realSeries, monthIndex);
+
+            datasetsArr = [
+              {
+                label: 'RKAP',
+                data: rkapSeries,
+                borderColor: '#94A3B8',
+                borderDash: [4, 4],
+                backgroundColor: 'transparent',
+                tension: 0.2
+              },
+              {
+                label: (kpi.key === 'lar' || kpi.key === 'npl') ? 'Beban' : 'Realisasi',
+                data: realSeries,
+                borderColor: '#002B66',
+                backgroundColor: 'rgba(0, 43, 102, 0.08)',
+                fill: true,
+                tension: 0.2
+              },
+              {
+                label: 'Garis Trend',
+                data: trendSeries,
+                borderColor: '#E31E24',
+                borderDash: [3, 3],
+                borderWidth: 2,
+                pointRadius: 0,
+                backgroundColor: 'transparent',
+                tension: 0
+              }
+            ];
+          }
+
+          if (chartInstances[kpi.key]) {
+            chartInstances[kpi.key].destroy();
+          }
+
+          chartInstances[kpi.key] = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: CHART_X_LABELS,
+              datasets: datasetsArr
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { position: 'top', labels: { font: { size: 10, weight: 'bold' } } }
+              },
+              scales: {
+                x: { ticks: { font: { size: 9, weight: 'bold' } } },
+                y: { ticks: { font: { size: 9 } } }
+              }
+            }
+          });
+        }, 50);
+      });
+    }
+
+    // LOGIKA FILTER
     function filterByKolekLogic(row, selectedOpt) {
       if (!selectedOpt) return true;
-
       const i = parseFloat(row.colI);
       const optStr = String(selectedOpt).toUpperCase().trim();
 
-      if (optStr.includes("1A")) {
-        return !isNaN(i) && i < 1;
-      }
-      
-      if (optStr.includes("1B")) {
-        return !isNaN(i) && i >= 1 && i <= 30;
-      }
-
-      if (optStr.includes("2A")) {
-        return !isNaN(i) && i >= 31 && i <= 60;
-      }
-
-      if (optStr.includes("2B")) {
-        return !isNaN(i) && i >= 61 && i <= 90;
-      }
-
-      if (optStr.includes("3")) {
-        return !isNaN(i) && i >= 91 && i <= 120;
-      }
-
-      if (optStr.includes("NPL")) {
-        return !isNaN(i) && i >= 121;
-      }
+      if (optStr.includes("1A")) return !isNaN(i) && i < 1;
+      if (optStr.includes("1B")) return !isNaN(i) && i >= 1 && i <= 30;
+      if (optStr.includes("2A")) return !isNaN(i) && i >= 31 && i <= 60;
+      if (optStr.includes("2B")) return !isNaN(i) && i >= 61 && i <= 90;
+      if (optStr.includes("3")) return !isNaN(i) && i >= 91 && i <= 120;
+      if (optStr.includes("NPL")) return !isNaN(i) && i >= 121;
 
       return String(row.colA).toUpperCase().includes(optStr) || String(row.colJ).toUpperCase().includes(optStr);
     }
@@ -548,67 +1080,50 @@
       const kolekVal = document.getElementById('selectKolek').value;
       const nasabahVal = document.getElementById('inputNasabah').value.trim().toLowerCase();
 
-      filteredDatabase = rawDatabase.filter(row => {
-        const matchKolek = filterByKolekLogic(row, kolekVal);
-        const matchNasabah = !nasabahVal || String(row.colC).toLowerCase().includes(nasabahVal);
-        return matchKolek && matchNasabah;
+      const kolekFilteredDatabase = rawDatabase.filter(row => filterByKolekLogic(row, kolekVal));
+
+      filteredDatabase = kolekFilteredDatabase.filter(row => {
+        return !nasabahVal || String(row.colC).toLowerCase().includes(nasabahVal);
       });
 
-      renderKPIs();
+      renderKPIs(kolekFilteredDatabase, kolekVal);
       renderTable();
       
       const currentSelected = rawDatabase.find(r => String(r.colC).toLowerCase() === nasabahVal);
       if (currentSelected) {
         updateAutoTabs(currentSelected);
+      } else if (!nasabahVal) {
+        resetAutoTabs();
       }
       setupDoubleScroll();
     }
 
-    /**
-     * Render Indikator Beban, NOA & SCR %
-     */
-    function renderKPIs() {
-      const kolekVal = document.getElementById('selectKolek').value;
-
-      // Sisa Beban (OS) = Sum Kolom G (Database Terfilter) & NOA
-      const sisaBeban = filteredDatabase.reduce((acc, r) => acc + (parseFloat(r.colG) || 0), 0);
-      const noaSisa = filteredDatabase.length;
+    function renderKPIs(kolekFilteredDb, kolekVal) {
+      const sisaBeban = kolekFilteredDb.reduce((acc, r) => acc + (parseFloat(r.colG) || 0), 0);
+      const noaSisa = kolekFilteredDb.length;
       
-      // Total Beban = Sum Kolom D (Basedon Terfilter Kolektibilitas) & NOA
       const filteredBasedon = rawBasedon.filter(row => filterByKolekLogic(row, kolekVal));
       const totalBeban = filteredBasedon.reduce((acc, r) => acc + (parseFloat(r.colD) || 0), 0);
       const noaTotal = filteredBasedon.length;
 
-      // Formula SCR: (Total Beban - Sisa Beban) / Total Beban
-      let scr = 0;
-      if (totalBeban > 0) {
-        scr = ((totalBeban - sisaBeban) / totalBeban) * 100;
-      }
+      let scr = totalBeban > 0 ? ((totalBeban - sisaBeban) / totalBeban) * 100 : 0;
 
       document.getElementById('cardSisaBeban').innerText = formatNumber(sisaBeban);
       document.getElementById('noaSisaBeban').innerText = `NOA: ${formatNumber(noaSisa)}`;
-
       document.getElementById('cardTotalBeban').innerText = formatNumber(totalBeban);
       document.getElementById('noaTotalBeban').innerText = `NOA: ${formatNumber(noaTotal)}`;
-
-      document.getElementById('cardSCR').innerText = scr.toFixed(2) + "%";
+      document.getElementById('cardSCR').innerText = formatPercent(scr);
       document.getElementById('recordCount').innerText = `${filteredDatabase.length} Number of Account`;
     }
 
-    // Render Tab Kualitas (Kolektibilitas Cards)
     function renderKualitasTab() {
-      // 1. Render ALL / Total OVERALL
       const totalBebanAll = rawBasedon.reduce((acc, r) => acc + (parseFloat(r.colD) || 0), 0);
       const noaTotalAll = rawBasedon.length;
       const sisaBebanAll = rawDatabase.reduce((acc, r) => acc + (parseFloat(r.colG) || 0), 0);
       const noaSisaAll = rawDatabase.length;
 
-      let scrAll = 0;
-      if (totalBebanAll > 0) {
-        scrAll = ((totalBebanAll - sisaBebanAll) / totalBebanAll) * 100;
-      }
-      if (scrAll < 0) scrAll = 0;
-      if (scrAll > 100) scrAll = 100;
+      let scrAll = totalBebanAll > 0 ? ((totalBebanAll - sisaBebanAll) / totalBebanAll) * 100 : 0;
+      if (scrAll < 0) scrAll = 0; if (scrAll > 100) scrAll = 100;
 
       const realisasiOsAll = Math.max(0, totalBebanAll - sisaBebanAll);
       const realisasiNoaAll = Math.max(0, noaTotalAll - noaSisaAll);
@@ -617,15 +1132,13 @@
       document.getElementById('kual_all_tb_os').innerText = formatNumber(totalBebanAll);
       document.getElementById('kual_all_sb_noa').innerText = formatNumber(noaSisaAll);
       document.getElementById('kual_all_sb_os').innerText = formatNumber(sisaBebanAll);
-      document.getElementById('kual_all_scr').innerText = scrAll.toFixed(2) + "%";
+      document.getElementById('kual_all_scr').innerText = formatPercent(scrAll);
       document.getElementById('kual_all_real_os').innerText = formatNumber(realisasiOsAll);
       document.getElementById('kual_all_real_noa').innerText = formatNumber(realisasiNoaAll);
 
-      // Render Conic Gradient (Donut Chart Hijau SCR / Merah Sisa)
       document.getElementById('kual_all_chart').style.background = 
         `conic-gradient(#8DC63F 0% ${scrAll}%, #E31E24 ${scrAll}% 100%)`;
 
-      // 2. Render Cards Per Kolektibilitas
       const container = document.getElementById('kualitasGridContainer');
       container.innerHTML = '';
 
@@ -637,16 +1150,11 @@
 
         const tbOs = filteredBasedonCat.reduce((acc, r) => acc + (parseFloat(r.colD) || 0), 0);
         const tbNoa = filteredBasedonCat.length;
-
         const sbOs = filteredDbCat.reduce((acc, r) => acc + (parseFloat(r.colG) || 0), 0);
         const sbNoa = filteredDbCat.length;
 
-        let scr = 0;
-        if (tbOs > 0) {
-          scr = ((tbOs - sbOs) / tbOs) * 100;
-        }
-        if (scr < 0) scr = 0;
-        if (scr > 100) scr = 100;
+        let scr = tbOs > 0 ? ((tbOs - sbOs) / tbOs) * 100 : 0;
+        if (scr < 0) scr = 0; if (scr > 100) scr = 100;
 
         const realOs = Math.max(0, tbOs - sbOs);
         const realNoa = Math.max(0, tbNoa - sbNoa);
@@ -656,7 +1164,7 @@
         card.innerHTML = `
           <div class="flex justify-between items-center border-b border-slate-100 pb-2">
             <h3 class="text-pnm-navy text-sm font-black uppercase tracking-wide flex items-center gap-1.5">
-              <i class="fa-solid fa-[#8DC63F] fa-layer-group text-xs text-[#8DC63F]"></i> ${cat}
+              <i class="fa-solid fa-layer-group text-xs text-[#8DC63F]"></i> ${cat}
             </h3>
             <span class="text-[10px] font-bold text-slate-400">KOLEKTIBILITAS</span>
           </div>
@@ -666,8 +1174,7 @@
               <div class="bg-white rounded-lg p-2.5 card-shadow border-l-4 border-slate-600 border border-slate-100">
                 <p class="font-bold text-slate-400 text-[10px] uppercase mb-1">TOTAL BEBAN</p>
                 <div class="flex justify-between text-[10px] text-slate-400 font-semibold">
-                  <span>NOA</span>
-                  <span>OS</span>
+                  <span>NOA</span><span>OS</span>
                 </div>
                 <div class="flex justify-between text-xs font-black text-slate-800">
                   <span>${formatNumber(tbNoa)}</span>
@@ -678,8 +1185,7 @@
               <div class="bg-white rounded-lg p-2.5 card-shadow border-l-4 border-pnm-red border border-slate-100">
                 <p class="font-bold text-slate-400 text-[10px] uppercase mb-1">SISA BEBAN</p>
                 <div class="flex justify-between text-[10px] text-slate-400 font-semibold">
-                  <span>NOA</span>
-                  <span>OS</span>
+                  <span>NOA</span><span>OS</span>
                 </div>
                 <div class="flex justify-between text-xs font-black text-pnm-red">
                   <span>${formatNumber(sbNoa)}</span>
@@ -691,21 +1197,14 @@
             <div class="flex justify-center items-center">
               <div class="relative w-36 h-36 rounded-full flex items-center justify-center shadow-md border-2 border-white"
                    style="background: conic-gradient(#8DC63F 0% ${scr}%, #E31E24 ${scr}% 100%);">
-                
                 <div class="w-24 h-24 bg-white rounded-full flex flex-col items-center justify-center text-center p-1 shadow-inner z-10 border border-slate-100">
                   <span class="text-[9px] font-bold uppercase text-slate-400">SUCCESS</span>
-                  <span class="font-black text-base text-pnm-navy">${scr.toFixed(1)}%</span>
-                  
+                  <span class="font-black text-base text-pnm-navy">${formatPercent(scr)}</span>
                   <div class="mt-0.5 pt-0.5 border-t border-slate-100 w-full text-[8px] font-bold">
-                    <p class="text-[#8DC63F] font-extrabold truncate" title="Realisasi OS">
-                      Rp${formatNumber(realOs)}
-                    </p>
-                    <p class="text-slate-400 font-semibold truncate">
-                      ${formatNumber(realNoa)} NOA
-                    </p>
+                    <p class="text-[#8DC63F] font-extrabold truncate" title="Realisasi OS">Rp${formatNumber(realOs)}</p>
+                    <p class="text-slate-400 font-semibold truncate">${formatNumber(realNoa)} NOA</p>
                   </div>
                 </div>
-
               </div>
             </div>
           </div>
@@ -714,7 +1213,6 @@
       });
     }
 
-    // Render Tabel Rincian Nasabah
     function renderTable() {
       const tbody = document.getElementById('tableBody');
       tbody.innerHTML = '';
@@ -735,7 +1233,6 @@
         tr.className = 'hover:bg-blue-50/60 transition cursor-pointer border-b border-slate-100';
         tr.onclick = () => selectNasabahDirect(row);
 
-        // Urutan Kolom: C | B | J | G | H | D | E | F | K | L | M
         tr.innerHTML = `
           <td class="py-3.5 px-4 font-bold text-pnm-navy whitespace-nowrap">${row.colC || '-'}</td>
           <td class="py-3.5 px-4 text-slate-700 whitespace-nowrap font-medium">${row.colB || '-'}</td>
@@ -755,7 +1252,6 @@
       setupDoubleScroll();
     }
 
-    // Auto-Suggest Handler Kolom C
     function onNasabahInput() {
       const val = document.getElementById('inputNasabah').value.trim().toLowerCase();
       const suggestBox = document.getElementById('suggestBox');
@@ -770,7 +1266,9 @@
         return;
       }
 
-      const matches = rawDatabase.filter(r => String(r.colC).toLowerCase().includes(val));
+      const kolekVal = document.getElementById('selectKolek').value;
+      const kolekFilteredDb = rawDatabase.filter(r => filterByKolekLogic(r, kolekVal));
+      const matches = kolekFilteredDb.filter(r => String(r.colC).toLowerCase().includes(val));
 
       if (matches.length > 0) {
         suggestBox.innerHTML = '';
@@ -812,7 +1310,6 @@
       applyFilters();
     }
 
-    // Update Auto-filling Tabs Panel
     function updateAutoTabs(row) {
       document.getElementById('selectedNama').innerText = row.colC || 'Detail Nasabah';
       document.getElementById('tabNorek').innerText = row.colB || '-';
@@ -820,7 +1317,6 @@
       document.getElementById('tabOS').innerText = formatNumber(row.colG);
       document.getElementById('tabBriva').innerText = row.colM || '-';
 
-      // Maps Button
       const locContainer = document.getElementById('tabLokasiContainer');
       if (row.colO) {
         const mapUrl = String(row.colO).startsWith('http') ? row.colO : `https://maps.google.com/?q=${encodeURIComponent(row.colO)}`;
@@ -834,7 +1330,6 @@
         locContainer.innerHTML = `<span class="text-xs text-blue-300 italic font-medium">Tidak ada lokasi</span>`;
       }
 
-      // WA Direct Button
       const hpContainer = document.getElementById('tabHpContainer');
       const waLink = formatWaLink(row.colN);
       if (waLink) {
@@ -862,7 +1357,7 @@
     document.addEventListener('click', function(e) {
       const suggestBox = document.getElementById('suggestBox');
       const inputNasabah = document.getElementById('inputNasabah');
-      if (!suggestBox.contains(e.target) && e.target !== inputNasabah) {
+      if (suggestBox && inputNasabah && !suggestBox.contains(e.target) && e.target !== inputNasabah) {
         suggestBox.classList.add('hidden');
       }
     });
