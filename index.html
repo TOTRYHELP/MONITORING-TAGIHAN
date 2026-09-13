@@ -640,7 +640,6 @@
             </div>
           `;
         } else if (kpi.key === 'fpd') {
-          // KETERANGAN NOA SAMA DENGAN 3R & WARNA ANGKA MERAH (BELUM 0) / HIJAU (SUDAH 0)
           const noaBU = item.noa || 0;
           const textFpdColor = real === 0 ? 'text-emerald-600' : 'text-pnm-red';
 
@@ -712,7 +711,6 @@
             </div>
           `;
         } else if (kpi.key === 'potensi_npl') {
-          // WARNA ANGKA MERAH (BELUM 0) / HIJAU (SUDAH 0)
           const totalBebanBN = item.totalBeban || 0;
           const noaBP = item.noa || 0;
           const textPotensiColor = real === 0 ? 'text-emerald-600' : 'text-pnm-red';
@@ -810,7 +808,6 @@
             </div>
           `;
         } else if (kpi.key === 'r3') {
-          // WARNA ANGKA MERAH (BELUM 0) / HIJAU (SUDAH 0)
           const tb = item.totalBeban || 0;
           const noaAX = item.noa || 0;
           const textR3Color = real === 0 ? 'text-emerald-600' : 'text-pnm-red';
@@ -859,7 +856,6 @@
       const chartsContainer = document.getElementById('overviewChartsContainer');
       chartsContainer.innerHTML = '';
 
-      // Render Grafik & Tabel Perkembangan Bulanan
       OVERVIEW_KPIS.filter(kpi => kpi.hasChart).forEach(kpi => {
         const section = document.createElement('div');
         section.className = "bg-white/90 backdrop-blur-md rounded-xl p-5 card-shadow border border-slate-200/80 space-y-4";
@@ -1080,7 +1076,9 @@
       const kolekVal = document.getElementById('selectKolek').value;
       const nasabahVal = document.getElementById('inputNasabah').value.trim().toLowerCase();
 
-      const kolekFilteredDatabase = rawDatabase.filter(row => filterByKolekLogic(row, kolekVal));
+      // Memastikan hanya baris yang memiliki data valid / OS > 0 yang dihitung
+      const validDatabase = rawDatabase.filter(r => (parseFloat(r.colG) || 0) > 0 || (r.colC && String(r.colC).trim() !== ''));
+      const kolekFilteredDatabase = validDatabase.filter(row => filterByKolekLogic(row, kolekVal));
 
       filteredDatabase = kolekFilteredDatabase.filter(row => {
         return !nasabahVal || String(row.colC).toLowerCase().includes(nasabahVal);
@@ -1102,7 +1100,8 @@
       const sisaBeban = kolekFilteredDb.reduce((acc, r) => acc + (parseFloat(r.colG) || 0), 0);
       const noaSisa = kolekFilteredDb.length;
       
-      const filteredBasedon = rawBasedon.filter(row => filterByKolekLogic(row, kolekVal));
+      const validBasedon = rawBasedon.filter(r => (parseFloat(r.colD) || 0) > 0 || (r.colC && String(r.colC).trim() !== ''));
+      const filteredBasedon = validBasedon.filter(row => filterByKolekLogic(row, kolekVal));
       const totalBeban = filteredBasedon.reduce((acc, r) => acc + (parseFloat(r.colD) || 0), 0);
       const noaTotal = filteredBasedon.length;
 
@@ -1117,10 +1116,14 @@
     }
 
     function renderKualitasTab() {
-      const totalBebanAll = rawBasedon.reduce((acc, r) => acc + (parseFloat(r.colD) || 0), 0);
-      const noaTotalAll = rawBasedon.length;
-      const sisaBebanAll = rawDatabase.reduce((acc, r) => acc + (parseFloat(r.colG) || 0), 0);
-      const noaSisaAll = rawDatabase.length;
+      // PERBAIKAN: Filter data agar hanya memproses row yang benar-benar memiliki value valid saja
+      const validBasedonAll = rawBasedon.filter(r => (parseFloat(r.colD) || 0) > 0 || (r.colC && String(r.colC).trim() !== ''));
+      const validDatabaseAll = rawDatabase.filter(r => (parseFloat(r.colG) || 0) > 0 || (r.colC && String(r.colC).trim() !== ''));
+
+      const totalBebanAll = validBasedonAll.reduce((acc, r) => acc + (parseFloat(r.colD) || 0), 0);
+      const noaTotalAll = validBasedonAll.length;
+      const sisaBebanAll = validDatabaseAll.reduce((acc, r) => acc + (parseFloat(r.colG) || 0), 0);
+      const noaSisaAll = validDatabaseAll.length;
 
       let scrAll = totalBebanAll > 0 ? ((totalBebanAll - sisaBebanAll) / totalBebanAll) * 100 : 0;
       if (scrAll < 0) scrAll = 0; if (scrAll > 100) scrAll = 100;
@@ -1145,8 +1148,9 @@
       const categories = rawOptions.length > 0 ? rawOptions : ["0-HARI | 1A", "31-60 | 1B", "31-60 | 2A", "61-90 | 2B", "3R", "NPL"];
 
       categories.forEach(cat => {
-        const filteredBasedonCat = rawBasedon.filter(r => filterByKolekLogic(r, cat));
-        const filteredDbCat = rawDatabase.filter(r => filterByKolekLogic(r, cat));
+        // PERBAIKAN: Hanya kalkulasi row yang terisi value valid
+        const filteredBasedonCat = validBasedonAll.filter(r => filterByKolekLogic(r, cat));
+        const filteredDbCat = validDatabaseAll.filter(r => filterByKolekLogic(r, cat));
 
         const tbOs = filteredBasedonCat.reduce((acc, r) => acc + (parseFloat(r.colD) || 0), 0);
         const tbNoa = filteredBasedonCat.length;
@@ -1267,7 +1271,8 @@
       }
 
       const kolekVal = document.getElementById('selectKolek').value;
-      const kolekFilteredDb = rawDatabase.filter(r => filterByKolekLogic(r, kolekVal));
+      const validDb = rawDatabase.filter(r => (parseFloat(r.colG) || 0) > 0 || (r.colC && String(r.colC).trim() !== ''));
+      const kolekFilteredDb = validDb.filter(r => filterByKolekLogic(r, kolekVal));
       const matches = kolekFilteredDb.filter(r => String(r.colC).toLowerCase().includes(val));
 
       if (matches.length > 0) {
