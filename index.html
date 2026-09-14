@@ -118,13 +118,13 @@
       <div class="bg-white/90 backdrop-blur-md rounded-xl p-5 card-shadow border border-slate-200/80 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 class="text-base font-black text-pnm-navy flex items-center gap-2 uppercase tracking-wide">
-            <i class="fa-solid fa-filter text-pnm-cyan"></i> Filter Utama Periode
+            <i class="fa-solid fa-filter text-pnm-cyan"></i> FILTER BULAN PORTOFOLIO
           </h2>
           <p class="text-xs text-slate-500">Pilih Bulan Berjalan untuk memperbarui nilai KPI & Trendline Grafik</p>
         </div>
         <div class="w-full md:w-72">
           <select id="selectBulanOverview" onchange="renderOverviewTab()" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-pnm-navy transition cursor-pointer">
-            <!-- Dynamic Options Tanpa No Urut -->
+            <!-- Dynamic Options -->
           </select>
         </div>
       </div>
@@ -382,7 +382,7 @@
 
   <footer class="bg-slate-900 text-slate-400 text-xs py-5 border-t border-slate-800 mt-10">
     <div class="max-w-7xl mx-auto px-4 text-center space-y-1">
-      <p class="font-semibold text-slate-300">Dashboard Portofolio • PNM ULaMM UMBULHARJO</p>
+      <p class="font-semibold text-slate-300">DASHBOARD PORTOFOLIO • PNM ULaMM UMBULHARJO</p>
       <p class="text-slate-500">© 2026 TEAM UNIT PNM ULaMM UMBULHARJO. All Rights Reserved.</p>
     </div>
   </footer>
@@ -1066,7 +1066,7 @@
       if (optStr.includes("1B")) return !isNaN(i) && i >= 1 && i <= 30;
       if (optStr.includes("2A")) return !isNaN(i) && i >= 31 && i <= 60;
       if (optStr.includes("2B")) return !isNaN(i) && i >= 61 && i <= 90;
-      if (optStr.includes("3")) return !isNaN(i) && i >= 91 && i <= 120;
+      if (optStr.includes("3") && !optStr.includes("3R")) return !isNaN(i) && i >= 91 && i <= 120;
       if (optStr.includes("NPL")) return !isNaN(i) && i >= 121;
 
       return String(row.colA).toUpperCase().includes(optStr) || String(row.colJ).toUpperCase().includes(optStr);
@@ -1076,7 +1076,6 @@
       const kolekVal = document.getElementById('selectKolek').value;
       const nasabahVal = document.getElementById('inputNasabah').value.trim().toLowerCase();
 
-      // Memastikan hanya baris yang memiliki data valid / OS > 0 yang dihitung
       const validDatabase = rawDatabase.filter(r => (parseFloat(r.colG) || 0) > 0 || (r.colC && String(r.colC).trim() !== ''));
       const kolekFilteredDatabase = validDatabase.filter(row => filterByKolekLogic(row, kolekVal));
 
@@ -1115,8 +1114,8 @@
       document.getElementById('recordCount').innerText = `${filteredDatabase.length} Number of Account`;
     }
 
+    // ================= MONITORING KUALITAS TAB LOGIC =================
     function renderKualitasTab() {
-      // PERBAIKAN: Filter data agar hanya memproses row yang benar-benar memiliki value valid saja
       const validBasedonAll = rawBasedon.filter(r => (parseFloat(r.colD) || 0) > 0 || (r.colC && String(r.colC).trim() !== ''));
       const validDatabaseAll = rawDatabase.filter(r => (parseFloat(r.colG) || 0) > 0 || (r.colC && String(r.colC).trim() !== ''));
 
@@ -1145,12 +1144,61 @@
       const container = document.getElementById('kualitasGridContainer');
       container.innerHTML = '';
 
-      const categories = rawOptions.length > 0 ? rawOptions : ["0-HARI | 1A", "31-60 | 1B", "31-60 | 2A", "61-90 | 2B", "3R", "NPL"];
+      // Urutan Kategori Card
+      let categories = ["0-HARI | 1A", "LAR 3R", "1-30 | 1B", "31-60 | 2A", "61-90 | 2B", "NPL"];
 
       categories.forEach(cat => {
-        // PERBAIKAN: Hanya kalkulasi row yang terisi value valid
-        const filteredBasedonCat = validBasedonAll.filter(r => filterByKolekLogic(r, cat));
-        const filteredDbCat = validDatabaseAll.filter(r => filterByKolekLogic(r, cat));
+        const upperCat = String(cat).toUpperCase();
+
+        let filteredBasedonCat = [];
+        let filteredDbCat = validDatabaseAll.filter(r => filterByKolekLogic(r, cat));
+
+        // 1. CARD KOL 1A: Total Beban D dengan G != "3R" DAN E == "0"
+        if (upperCat.includes("1A") || upperCat.includes("0-HARI")) {
+          filteredDbCat = filteredDbCat.filter(r => String(r.colP || '').toUpperCase().trim() !== "3R");
+          filteredBasedonCat = validBasedonAll.filter(r => {
+            const colEVal = parseFloat(r.colE);
+            const colGVal = String(r.colG || '').toUpperCase().trim();
+            return colGVal !== "3R" && colEVal === 0;
+          });
+        } 
+        // 2. CARD KOL 1B: Total Beban D dengan G != "3R" DAN E == 1 SAMPAI 30
+        else if (upperCat.includes("1B") || upperCat.includes("1-30")) {
+          filteredBasedonCat = validBasedonAll.filter(r => {
+            const colEVal = parseFloat(r.colE);
+            const colGVal = String(r.colG || '').toUpperCase().trim();
+            return colGVal !== "3R" && colEVal >= 1 && colEVal <= 30;
+          });
+        }
+        // 3. CARD KOL 2A: Total Beban D dengan G != "3R" DAN E == 31 SAMPAI 60
+        else if (upperCat.includes("2A") || upperCat.includes("31-60")) {
+          filteredBasedonCat = validBasedonAll.filter(r => {
+            const colEVal = parseFloat(r.colE);
+            const colGVal = String(r.colG || '').toUpperCase().trim();
+            return colGVal !== "3R" && colEVal >= 31 && colEVal <= 60;
+          });
+        }
+        // 4. CARD KOL 2B: Total Beban D dengan G != "3R" DAN E == 61 SAMPAI 90
+        else if (upperCat.includes("2B") || upperCat.includes("61-90")) {
+          filteredBasedonCat = validBasedonAll.filter(r => {
+            const colEVal = parseFloat(r.colE);
+            const colGVal = String(r.colG || '').toUpperCase().trim();
+            return colGVal !== "3R" && colEVal >= 61 && colEVal <= 90;
+          });
+        }
+        // 5. CARD NPL: Total Beban D dengan G != "3R" DAN E > 90
+        else if (upperCat.includes("NPL")) {
+          filteredBasedonCat = validBasedonAll.filter(r => {
+            const colEVal = parseFloat(r.colE);
+            const colGVal = String(r.colG || '').toUpperCase().trim();
+            return colGVal !== "3R" && colEVal > 90;
+          });
+        }
+        // 6. CARD LAR 3R: Total Beban D dengan G == "3R"
+        else if (upperCat.includes("LAR 3R") || upperCat === "3R") {
+          filteredDbCat = validDatabaseAll.filter(r => String(r.colP || '').toUpperCase().trim() === "3R");
+          filteredBasedonCat = validBasedonAll.filter(r => String(r.colG || '').toUpperCase().trim() === "3R");
+        }
 
         const tbOs = filteredBasedonCat.reduce((acc, r) => acc + (parseFloat(r.colD) || 0), 0);
         const tbNoa = filteredBasedonCat.length;
