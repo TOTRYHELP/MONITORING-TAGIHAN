@@ -402,7 +402,7 @@
               <span class="text-[10px] text-orange-700 font-bold uppercase">OS LAR</span>
               <span id="card_aging_fpd_os" class="text-sm font-black text-orange-900">0</span>
             </div>
-            <!-- DITAMBAHKAN TOTAL NOA DAN OS YANG MASIH ADA DALAM TABEL DENGAN PARAMETER TAGIHAN KE- < 7 -->
+            <!-- TOTAL NOA DAN OS YANG MASIH ADA DALAM TABEL DENGAN PARAMETER TAGIHAN KE- < 7 -->
             <div class="border-t border-orange-200/50 pt-1 mt-1 space-y-0.5">
               <div class="flex justify-between items-baseline">
                 <span class="text-[9px] text-orange-800 font-bold uppercase">NOA</span>
@@ -477,6 +477,16 @@
               <span class="text-[10px] text-rose-700 font-bold uppercase">OS</span>
               <span id="card_aging_2a_os" class="text-sm font-black text-rose-900">0</span>
             </div>
+            <div class="border-t border-rose-200/50 pt-1 mt-1 space-y-0.5">
+              <div class="flex justify-between items-baseline">
+                <span class="text-[9px] text-rose-800 font-bold uppercase">FLOW NOA</span>
+                <span id="card_aging_2a_flow_noa" class="text-xs font-black text-slate-800">0</span>
+              </div>
+              <div class="flex justify-between items-baseline">
+                <span class="text-[9px] text-rose-800 font-bold uppercase">FLOW OS</span>
+                <span id="card_aging_2a_flow_os" class="text-xs font-black text-rose-900">0</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -495,6 +505,16 @@
               <span class="text-[10px] text-red-700 font-bold uppercase">OS</span>
               <span id="card_aging_2b_os" class="text-sm font-black text-pnm-red">0</span>
             </div>
+            <div class="border-t border-red-200/50 pt-1 mt-1 space-y-0.5">
+              <div class="flex justify-between items-baseline">
+                <span class="text-[9px] text-red-800 font-bold uppercase">FLOW NOA</span>
+                <span id="card_aging_2b_flow_noa" class="text-xs font-black text-slate-800">0</span>
+              </div>
+              <div class="flex justify-between items-baseline">
+                <span class="text-[9px] text-red-800 font-bold uppercase">FLOW OS</span>
+                <span id="card_aging_2b_flow_os" class="text-xs font-black text-pnm-red">0</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -512,6 +532,16 @@
             <div class="flex justify-between items-baseline border-t border-slate-800 pt-1">
               <span class="text-[10px] text-slate-400 font-bold uppercase">OS</span>
               <span id="card_aging_npl_os" class="text-sm font-black text-red-400">0</span>
+            </div>
+            <div class="border-t border-slate-800 pt-1 mt-1 space-y-0.5">
+              <div class="flex justify-between items-baseline">
+                <span class="text-[9px] text-slate-400 font-bold uppercase">FLOW NOA</span>
+                <span id="card_aging_npl_flow_noa" class="text-xs font-black text-white">0</span>
+              </div>
+              <div class="flex justify-between items-baseline">
+                <span class="text-[9px] text-slate-400 font-bold uppercase">FLOW OS</span>
+                <span id="card_aging_npl_flow_os" class="text-xs font-black text-red-400">0</span>
+              </div>
             </div>
           </div>
         </div>
@@ -1609,32 +1639,8 @@
 
     // ================= MONITORING AGING TAB LOGIC =================
     function renderAgingTab() {
-      const validAging = rawAging.filter(r => (r.colB && String(r.colB).trim() !== '') || (parseFloat(r.colG) || 0) > 0);
-      const validBasedonAll = rawBasedon.filter(r => (parseFloat(r.colD) || 0) > 0 || (r.colC && String(r.colC).trim() !== ''));
-
-      // Kriteria penyerapan Aging
-      // KOL 1A: I < 1
-      const list1A = validAging.filter(r => r.colI < 1);
-      // KOL 1B: 0 < I < 31 (Kuning)
-      const list1B = validAging.filter(r => r.colI > 0 && r.colI < 31);
-      // KOL 2A: 30 < I < 61 (Merah Muda)
-      const list2A = validAging.filter(r => r.colI > 30 && r.colI < 61);
-      // KOL 2B: 60 < I < 91 (Merah)
-      const list2B = validAging.filter(r => r.colI > 60 && r.colI < 91);
-      // NPL: I > 90 (Hitam)
-      const listNPL = validAging.filter(r => r.colI > 90);
-      // FPD LAR: H < 7 DAN I > 0 (Orange)
-      const listFPD = validAging.filter(r => r.colI > 0 && r.colH < 7);
-
-      // KELOMPOK BARU FPD TOTAL: PARAMETER TAGIHAN KE- < 7 (Semua yang ada di tabel aging dengan Tagihan Ke- < 7)
-      const listFPDTotal = validAging.filter(r => parseFloat(r.colH) < 7);
-
-      // Kriteria Basedon Kol 1B (E >= 1 DAN E <= 30 DAN G != "3R")
-      const list1B_Basedon = validBasedonAll.filter(r => {
-        const colEVal = parseFloat(r.colE);
-        const colGVal = String(r.colG || '').toUpperCase().trim();
-        return colGVal !== "3R" && colEVal >= 1 && colEVal <= 30;
-      });
+      const validAging = rawAging.filter(r => (r.colA && String(r.colA).trim() !== '') || (parseFloat(r.colG) || 0) > 0);
+      const validBasedonAll = rawBasedon.filter(r => (r.colB && String(r.colB).trim() !== '') || (parseFloat(r.colD) || 0) > 0);
 
       // Helper penjelajah nilai OS & NOA
       const getStats = (arr) => ({
@@ -1642,43 +1648,102 @@
         os: arr.reduce((acc, r) => acc + (parseFloat(r.colG) || 0), 0)
       });
 
-      const getStatsBasedon = (arr) => ({
-        noa: arr.length,
-        os: arr.reduce((acc, r) => acc + (parseFloat(r.colD) || 0), 0)
+      // 1. KOL 1A: I < 1
+      const list1A = validAging.filter(r => parseFloat(r.colI) < 1);
+      
+      // 2. KOL 1B: 0 < I < 31 (Kuning)
+      const list1B = validAging.filter(r => parseFloat(r.colI) > 0 && parseFloat(r.colI) < 31);
+      // Pengecualian KOL 1B jika data AGING (Kolom A) ada di BASEDON (Kolom B) & 0 < E < 31
+      const list1B_Filtered = list1B.filter(ag => {
+        const matchInBasedon = validBasedonAll.some(bs => 
+          String(bs.colB).trim().toUpperCase() === String(ag.colA).trim().toUpperCase() &&
+          parseFloat(bs.colE) > 0 && parseFloat(bs.colE) < 31
+        );
+        return !matchInBasedon;
       });
+
+      // 3. KOL 2A: 30 < I < 61 (Merah Muda)
+      const list2A = validAging.filter(r => parseFloat(r.colI) > 30 && parseFloat(r.colI) < 61);
+      // Pengecualian KOL 2A jika data AGING (Kolom A) ada di BASEDON (Kolom B) & 30 < E < 61
+      const list2A_Filtered = list2A.filter(ag => {
+        const matchInBasedon = validBasedonAll.some(bs => 
+          String(bs.colB).trim().toUpperCase() === String(ag.colA).trim().toUpperCase() &&
+          parseFloat(bs.colE) > 30 && parseFloat(bs.colE) < 61
+        );
+        return !matchInBasedon;
+      });
+
+      // 4. KOL 2B: 60 < I < 91 (Merah)
+      const list2B = validAging.filter(r => parseFloat(r.colI) > 60 && parseFloat(r.colI) < 91);
+      // Pengecualian KOL 2B jika data AGING (Kolom A) ada di BASEDON (Kolom B) & 60 < E < 91
+      const list2B_Filtered = list2B.filter(ag => {
+        const matchInBasedon = validBasedonAll.some(bs => 
+          String(bs.colB).trim().toUpperCase() === String(ag.colA).trim().toUpperCase() &&
+          parseFloat(bs.colE) > 60 && parseFloat(bs.colE) < 91
+        );
+        return !matchInBasedon;
+      });
+
+      // 5. NPL: I > 90 (Hitam)
+      const listNPL = validAging.filter(r => parseFloat(r.colI) > 90);
+      // Pengecualian NPL jika data AGING (Kolom A) ada di BASEDON (Kolom B) & E > 90
+      const listNPL_Filtered = listNPL.filter(ag => {
+        const matchInBasedon = validBasedonAll.some(bs => 
+          String(bs.colB).trim().toUpperCase() === String(ag.colA).trim().toUpperCase() &&
+          parseFloat(bs.colE) > 90
+        );
+        return !matchInBasedon;
+      });
+
+      // 6. FPD LAR: H < 7 DAN I > 0 (Orange)
+      const listFPD = validAging.filter(r => parseFloat(r.colI) > 0 && parseFloat(r.colH) < 7);
+      const listFPDTotal = validAging.filter(r => parseFloat(r.colH) < 7);
 
       const s1A = getStats(list1A);
       const s1B = getStats(list1B);
-      const s1B_Basedon = getStatsBasedon(list1B_Basedon);
-
-      // Perhitungan NEW LAR = (TAB AGING) - (TAB BASED ON)
-      const newLarNoa = Math.max(0, s1B.noa - s1B_Basedon.noa);
-      const newLarOs = Math.max(0, s1B.os - s1B_Basedon.os);
+      const s1B_NewLar = getStats(list1B_Filtered);
 
       const s2A = getStats(list2A);
+      const s2A_Flow = getStats(list2A_Filtered);
+
       const s2B = getStats(list2B);
+      const s2B_Flow = getStats(list2B_Filtered);
+
       const sNPL = getStats(listNPL);
+      const sNPL_Flow = getStats(listNPL_Filtered);
+
       const sFPD = getStats(listFPD);
       const sFPDTotal = getStats(listFPDTotal);
 
+      // Set NILAI KE ELEMENT CARD
       document.getElementById('card_aging_1a_noa').innerText = formatNumber(s1A.noa);
       document.getElementById('card_aging_1a_os').innerText = formatNumber(s1A.os);
 
+      // CARD KOL 1B
       document.getElementById('card_aging_1b_noa').innerText = formatNumber(s1B.noa);
       document.getElementById('card_aging_1b_os').innerText = formatNumber(s1B.os);
-      document.getElementById('card_aging_1b_new_lar_noa').innerText = formatNumber(newLarNoa);
-      document.getElementById('card_aging_1b_new_lar_os').innerText = formatNumber(newLarOs);
+      document.getElementById('card_aging_1b_new_lar_noa').innerText = formatNumber(s1B_NewLar.noa);
+      document.getElementById('card_aging_1b_new_lar_os').innerText = formatNumber(s1B_NewLar.os);
 
+      // CARD KOL 2A
       document.getElementById('card_aging_2a_noa').innerText = formatNumber(s2A.noa);
       document.getElementById('card_aging_2a_os').innerText = formatNumber(s2A.os);
+      document.getElementById('card_aging_2a_flow_noa').innerText = formatNumber(s2A_Flow.noa);
+      document.getElementById('card_aging_2a_flow_os').innerText = formatNumber(s2A_Flow.os);
 
+      // CARD KOL 2B
       document.getElementById('card_aging_2b_noa').innerText = formatNumber(s2B.noa);
       document.getElementById('card_aging_2b_os').innerText = formatNumber(s2B.os);
+      document.getElementById('card_aging_2b_flow_noa').innerText = formatNumber(s2B_Flow.noa);
+      document.getElementById('card_aging_2b_flow_os').innerText = formatNumber(s2B_Flow.os);
 
+      // CARD NPL
       document.getElementById('card_aging_npl_noa').innerText = formatNumber(sNPL.noa);
       document.getElementById('card_aging_npl_os').innerText = formatNumber(sNPL.os);
+      document.getElementById('card_aging_npl_flow_noa').innerText = formatNumber(sNPL_Flow.noa);
+      document.getElementById('card_aging_npl_flow_os').innerText = formatNumber(sNPL_Flow.os);
 
-      // Card FPD LAR & Total < 7 Tagihan
+      // CARD FPD
       document.getElementById('card_aging_fpd_noa').innerText = formatNumber(sFPD.noa);
       document.getElementById('card_aging_fpd_os').innerText = formatNumber(sFPD.os);
       document.getElementById('card_aging_fpd_tot_noa').innerText = formatNumber(sFPDTotal.noa);
