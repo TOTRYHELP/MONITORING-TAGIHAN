@@ -440,7 +440,7 @@
       { key: 'lar', label: 'ALL LAR', hasChart: true },
       { key: 'npl', label: 'NPL', hasChart: true },
       { key: 'runoff', label: 'POTENSI RUN OFF', hasChart: false },
-      { key: 'carryover', label: 'CARRY OVER', hasChart: false },
+      { key: 'carryover', label: 'LENDING CARRY OVER', hasChart: false },
       { key: 'fpd', label: 'LAR FPD', hasChart: false },
       { key: 'kol1a', label: 'KOL 1A (0 HARI)', hasChart: true },
       { key: 'r3', label: 'LAR 3R', hasChart: false },
@@ -1039,7 +1039,7 @@
           section.innerHTML = `
             <div class="border-b border-slate-100 pb-2 flex justify-between items-center">
               <h3 class="text-sm font-black text-pnm-navy tracking-wide uppercase flex items-center gap-2">
-                <i class="fa-solid fa-chart-line text-pnm-cyan"></i> KPI ${kpi.label} PER BULAN
+                <i class="fa-solid fa-chart-line text-pnm-cyan"></i>${kpi.label}
               </h3>
               <span class="text-[10px] font-bold bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full">${CHART_X_LABELS[0]} s/d ${CHART_X_LABELS[12]}</span>
             </div>
