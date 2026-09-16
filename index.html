@@ -102,12 +102,15 @@
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full space-y-6">
 
     <!-- TAB NAVIGATION -->
-    <div class="flex border-b border-slate-300 gap-2">
-      <button id="btnTabOverview" onclick="switchTab('overview')" class="px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-pnm-navy bg-white text-pnm-navy shadow-sm">
+    <div class="flex border-b border-slate-300 gap-2 overflow-x-auto custom-scrollbar">
+      <button id="btnTabOverview" onclick="switchTab('overview')" class="px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-pnm-navy bg-white text-pnm-navy shadow-sm whitespace-nowrap">
         <i class="fa-solid fa-chart-pie text-pnm-cyan mr-1.5"></i> Overview
       </button>
-      <button id="btnTabMonitoringKualitas" onclick="switchTab('monitoring_kualitas')" class="px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-transparent text-slate-500 hover:text-pnm-navy hover:bg-white/50">
-        <i class="fa-solid fa-layer-group text-[#8DC63F] mr-1.5"></i> Monitoring Kualitas - Based On
+      <button id="btnTabMonitoringKualitas" onclick="switchTab('monitoring_kualitas')" class="px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-transparent text-slate-500 hover:text-pnm-navy hover:bg-white/50 whitespace-nowrap">
+        <i class="fa-solid fa-layer-group text-[#8DC63F] mr-1.5"></i> Based On
+      </button>
+      <button id="btnTabMonitoringAging" onclick="switchTab('monitoring_aging')" class="px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-transparent text-slate-500 hover:text-pnm-navy hover:bg-white/50 whitespace-nowrap">
+        <i class="fa-solid fa-clock-rotate-left text-amber-500 mr-1.5"></i> Aging
       </button>
     </div>
 
@@ -378,6 +381,190 @@
       </div>
     </div>
 
+    <!-- TAB CONTENT: MONITORING AGING -->
+    <div id="tabContentMonitoringAging" class="hidden space-y-6">
+      
+      <!-- CARD KPIS AGING -->
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        
+        <!-- CARD FPD (DITARUH PALING KIRI) -->
+        <div class="bg-orange-50/90 backdrop-blur-md rounded-xl p-4 card-shadow border-l-4 border-orange-500 border border-orange-200/80">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-black uppercase text-orange-800 tracking-wider">FPD</span>
+            <span class="text-[9px] font-extrabold bg-orange-200 text-orange-900 px-2 py-0.5 rounded">URGENT</span>
+          </div>
+          <div class="space-y-1">
+            <div class="flex justify-between items-baseline">
+              <span class="text-[10px] text-orange-700 font-bold uppercase">NOA LAR</span>
+              <span id="card_aging_fpd_noa" class="text-sm font-black text-slate-800">0</span>
+            </div>
+            <div class="flex justify-between items-baseline border-t border-orange-200/50 pt-1">
+              <span class="text-[10px] text-orange-700 font-bold uppercase">OS LAR</span>
+              <span id="card_aging_fpd_os" class="text-sm font-black text-orange-900">0</span>
+            </div>
+            <!-- DITAMBAHKAN TOTAL NOA DAN OS YANG MASIH ADA DALAM TABEL DENGAN PARAMETER TAGIHAN KE- < 7 -->
+            <div class="border-t border-orange-200/50 pt-1 mt-1 space-y-0.5">
+              <div class="flex justify-between items-baseline">
+                <span class="text-[9px] text-orange-800 font-bold uppercase">NOA</span>
+                <span id="card_aging_fpd_tot_noa" class="text-xs font-black text-slate-800">0</span>
+              </div>
+              <div class="flex justify-between items-baseline">
+                <span class="text-[9px] text-orange-800 font-bold uppercase">OS</span>
+                <span id="card_aging_fpd_tot_os" class="text-xs font-black text-orange-900">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD KOL 1A -->
+        <div class="bg-white/90 backdrop-blur-md rounded-xl p-4 card-shadow border-l-4 border-emerald-500 border border-slate-200/80">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-black uppercase text-emerald-700 tracking-wider">KOL 1A</span>
+            <span class="text-[9px] font-extrabold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">0 HARI</span>
+          </div>
+          <div class="space-y-1">
+            <div class="flex justify-between items-baseline">
+              <span class="text-[10px] text-slate-400 font-bold uppercase">NOA</span>
+              <span id="card_aging_1a_noa" class="text-sm font-black text-slate-800">0</span>
+            </div>
+            <div class="flex justify-between items-baseline border-t border-slate-100 pt-1">
+              <span class="text-[10px] text-slate-400 font-bold uppercase">OS</span>
+              <span id="card_aging_1a_os" class="text-sm font-black text-emerald-600">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD KOL 1B -->
+        <div class="bg-yellow-50/90 backdrop-blur-md rounded-xl p-4 card-shadow border-l-4 border-yellow-400 border border-yellow-200/80">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-black uppercase text-yellow-800 tracking-wider">KOL 1B</span>
+            <span class="text-[9px] font-extrabold bg-yellow-200 text-yellow-900 px-2 py-0.5 rounded">1 - 30</span>
+          </div>
+          <div class="space-y-1">
+            <div class="flex justify-between items-baseline">
+              <span class="text-[10px] text-yellow-700 font-bold uppercase">NOA</span>
+              <span id="card_aging_1b_noa" class="text-sm font-black text-slate-800">0</span>
+            </div>
+            <div class="flex justify-between items-baseline border-t border-yellow-200/50 pt-1">
+              <span class="text-[10px] text-yellow-700 font-bold uppercase">OS</span>
+              <span id="card_aging_1b_os" class="text-sm font-black text-yellow-900">0</span>
+            </div>
+            <div class="border-t border-yellow-200/50 pt-1 mt-1 space-y-0.5">
+              <div class="flex justify-between items-baseline">
+                <span class="text-[9px] text-yellow-800 font-bold uppercase">NEW LAR NOA</span>
+                <span id="card_aging_1b_new_lar_noa" class="text-xs font-black text-slate-800">0</span>
+              </div>
+              <div class="flex justify-between items-baseline">
+                <span class="text-[9px] text-yellow-800 font-bold uppercase">NEW LAR OS</span>
+                <span id="card_aging_1b_new_lar_os" class="text-xs font-black text-yellow-900">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD KOL 2A -->
+        <div class="bg-rose-50/90 backdrop-blur-md rounded-xl p-4 card-shadow border-l-4 border-rose-300 border border-rose-200/80">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-black uppercase text-rose-800 tracking-wider">KOL 2A</span>
+            <span class="text-[9px] font-extrabold bg-rose-200 text-rose-900 px-2 py-0.5 rounded">31 - 60</span>
+          </div>
+          <div class="space-y-1">
+            <div class="flex justify-between items-baseline">
+              <span class="text-[10px] text-rose-700 font-bold uppercase">NOA</span>
+              <span id="card_aging_2a_noa" class="text-sm font-black text-slate-800">0</span>
+            </div>
+            <div class="flex justify-between items-baseline border-t border-rose-200/50 pt-1">
+              <span class="text-[10px] text-rose-700 font-bold uppercase">OS</span>
+              <span id="card_aging_2a_os" class="text-sm font-black text-rose-900">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD KOL 2B -->
+        <div class="bg-red-50/90 backdrop-blur-md rounded-xl p-4 card-shadow border-l-4 border-pnm-red border border-red-200/80">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-black uppercase text-pnm-red tracking-wider">KOL 2B</span>
+            <span class="text-[9px] font-extrabold bg-red-200 text-red-900 px-2 py-0.5 rounded">61 - 90</span>
+          </div>
+          <div class="space-y-1">
+            <div class="flex justify-between items-baseline">
+              <span class="text-[10px] text-red-700 font-bold uppercase">NOA</span>
+              <span id="card_aging_2b_noa" class="text-sm font-black text-slate-800">0</span>
+            </div>
+            <div class="flex justify-between items-baseline border-t border-red-200/50 pt-1">
+              <span class="text-[10px] text-red-700 font-bold uppercase">OS</span>
+              <span id="card_aging_2b_os" class="text-sm font-black text-pnm-red">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD NPL -->
+        <div class="bg-slate-900 text-white rounded-xl p-4 card-shadow border-l-4 border-black border border-slate-800">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-black uppercase text-slate-200 tracking-wider">NPL</span>
+            <span class="text-[9px] font-extrabold bg-slate-800 text-slate-300 px-2 py-0.5 rounded">&gt; 90</span>
+          </div>
+          <div class="space-y-1">
+            <div class="flex justify-between items-baseline">
+              <span class="text-[10px] text-slate-400 font-bold uppercase">NOA</span>
+              <span id="card_aging_npl_noa" class="text-sm font-black text-white">0</span>
+            </div>
+            <div class="flex justify-between items-baseline border-t border-slate-800 pt-1">
+              <span class="text-[10px] text-slate-400 font-bold uppercase">OS</span>
+              <span id="card_aging_npl_os" class="text-sm font-black text-red-400">0</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- AGING DATA TABLE WITH DOUBLE SCROLLBAR -->
+      <div class="bg-white/90 backdrop-blur-md rounded-xl card-shadow border border-slate-200/80 overflow-hidden space-y-2">
+        <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+          <div>
+            <h3 class="font-bold text-pnm-navy text-base flex items-center gap-2">
+              <i class="fa-solid fa-clock-rotate-left text-amber-500"></i> Tabel Data Monitoring Aging
+            </h3>
+            <p class="text-xs text-slate-500 mt-0.5">Penilaian aging real &amp; kriteria tunggakan nasabah</p>
+          </div>
+          <span id="agingRecordCount" class="text-xs font-bold bg-slate-100 text-slate-600 px-3 py-1 rounded-full border border-slate-200">0 Account</span>
+        </div>
+
+        <!-- Top Scrollbar -->
+        <div id="agingTopScrollContainer" class="overflow-x-auto custom-scrollbar bg-slate-100/80 border-b border-slate-200" style="height: 12px;">
+          <div id="agingTopScrollDummy" style="height: 12px; width: 1200px;"></div>
+        </div>
+
+        <!-- Bottom Scrollbar & Table -->
+        <div id="agingTableScrollContainer" class="overflow-x-auto custom-scrollbar">
+          <table id="agingTable" class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-pnm-navy text-white uppercase font-bold tracking-wider text-[11px]">
+                <th class="py-3.5 px-4 whitespace-nowrap">NOREK</th>
+                <th class="py-3.5 px-4 whitespace-nowrap">NAMA</th>
+                <th class="py-3.5 px-4 whitespace-nowrap">REALISASI</th>
+                <th class="py-3.5 px-4 whitespace-nowrap text-center">JKW</th>
+                <th class="py-3.5 px-4 whitespace-nowrap">JATEM</th>
+                <th class="py-3.5 px-4 whitespace-nowrap text-right">PLAFOND</th>
+                <th class="py-3.5 px-4 whitespace-nowrap text-right">OS</th>
+                <th class="py-3.5 px-4 whitespace-nowrap text-center">TAGIHAN KE-</th>
+                <th class="py-3.5 px-4 whitespace-nowrap text-center">AGING REAL</th>
+              </tr>
+            </thead>
+            <tbody id="agingTableBody" class="divide-y divide-slate-100 font-medium">
+              <tr>
+                <td colspan="9" class="py-12 text-center text-slate-400">
+                  <i class="fa-solid fa-spinner fa-spin text-2xl text-pnm-navy mb-2"></i>
+                  <p class="text-xs font-semibold">Loading Aging Data...</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
   </main>
 
   <footer class="bg-slate-900 text-slate-400 text-xs py-5 border-t border-slate-800 mt-10">
@@ -394,6 +581,7 @@
     let rawDatabase = [];
     let rawBasedon = [];
     let rawResume = [];
+    let rawAging = [];
     let filteredDatabase = [];
     let chartInstances = {};
 
@@ -483,24 +671,30 @@
     function switchTab(tabName) {
       const btnOv = document.getElementById('btnTabOverview');
       const btnMonKual = document.getElementById('btnTabMonitoringKualitas');
+      const btnMonAging = document.getElementById('btnTabMonitoringAging');
       
       const contentOv = document.getElementById('tabContentOverview');
       const contentMonKual = document.getElementById('tabContentMonitoringKualitas');
+      const contentMonAging = document.getElementById('tabContentMonitoringAging');
 
-      [contentOv, contentMonKual].forEach(el => el.classList.add('hidden'));
-      [btnOv, btnMonKual].forEach(btn => {
-        btn.className = "px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-transparent text-slate-500 hover:text-pnm-navy hover:bg-white/50";
+      [contentOv, contentMonKual, contentMonAging].forEach(el => el.classList.add('hidden'));
+      [btnOv, btnMonKual, btnMonAging].forEach(btn => {
+        btn.className = "px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-transparent text-slate-500 hover:text-pnm-navy hover:bg-white/50 whitespace-nowrap";
       });
 
       if (tabName === 'overview') {
         contentOv.classList.remove('hidden');
-        btnOv.className = "px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-pnm-navy bg-white text-pnm-navy shadow-sm";
+        btnOv.className = "px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-pnm-navy bg-white text-pnm-navy shadow-sm whitespace-nowrap";
         renderOverviewTab();
-      } else {
+      } else if (tabName === 'monitoring_kualitas') {
         contentMonKual.classList.remove('hidden');
-        btnMonKual.className = "px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-pnm-navy bg-white text-pnm-navy shadow-sm";
+        btnMonKual.className = "px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-pnm-navy bg-white text-pnm-navy shadow-sm whitespace-nowrap";
         renderKualitasTab();
         applyFilters();
+      } else if (tabName === 'monitoring_aging') {
+        contentMonAging.classList.remove('hidden');
+        btnMonAging.className = "px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-t-lg transition border-b-2 border-pnm-navy bg-white text-pnm-navy shadow-sm whitespace-nowrap";
+        renderAgingTab();
       }
     }
 
@@ -522,6 +716,33 @@
       const bottomScroll = document.getElementById('tableScrollContainer');
       const topDummy = document.getElementById('topScrollDummy');
       const table = document.getElementById('mainTable');
+
+      if (!topScroll || !bottomScroll || !topDummy || !table) return;
+      topDummy.style.width = table.scrollWidth + 'px';
+
+      let isSyncingTop = false, isSyncingBottom = false;
+
+      topScroll.onscroll = () => {
+        if (!isSyncingTop) {
+          isSyncingBottom = true;
+          bottomScroll.scrollLeft = topScroll.scrollLeft;
+        }
+        isSyncingTop = false;
+      };
+      bottomScroll.onscroll = () => {
+        if (!isSyncingBottom) {
+          isSyncingTop = true;
+          topScroll.scrollLeft = bottomScroll.scrollLeft;
+        }
+        isSyncingBottom = false;
+      };
+    }
+
+    function setupDoubleScrollAging() {
+      const topScroll = document.getElementById('agingTopScrollContainer');
+      const bottomScroll = document.getElementById('agingTableScrollContainer');
+      const topDummy = document.getElementById('agingTopScrollDummy');
+      const table = document.getElementById('agingTable');
 
       if (!topScroll || !bottomScroll || !topDummy || !table) return;
       topDummy.style.width = table.scrollWidth + 'px';
@@ -588,6 +809,7 @@
       rawDatabase = res.database || [];
       rawBasedon = res.basedon || [];
       rawResume = res.resume || [];
+      rawAging = res.aging || [];
 
       const selectKolek = document.getElementById('selectKolek');
       selectKolek.innerHTML = '<option value="">-- SEMUA KOLEKTIBILITAS --</option>';
@@ -600,6 +822,7 @@
 
       renderOverviewTab();
       renderKualitasTab();
+      renderAgingTab();
       applyFilters();
     }
 
@@ -615,7 +838,6 @@
       const kpiGrid = document.getElementById('overviewKpiGrid');
       kpiGrid.innerHTML = '';
 
-      // Helper untuk kalkulasi versus bulan sebelumnya
       function getComparison(key, isInverse = false) {
         if (!prevResumeRow) return { prevVal: 0, prevNoa: 0, diff: 0, pctChange: 0, label: 'STATIS', badgeClass: 'bg-amber-100 text-amber-700' };
 
@@ -653,7 +875,6 @@
         return { prevVal, prevNoa, diff, pctChange, label, badgeClass };
       }
 
-      // Helper untuk kalkulasi selisih nominal RKAP vs Realisasi
       function getRkapDiffHTML(real, rkap, isInverse = false) {
         const diff = real - rkap;
         const diffSign = diff >= 0 ? '+' : '';
@@ -1272,7 +1493,6 @@
       const container = document.getElementById('kualitasGridContainer');
       container.innerHTML = '';
 
-      // Urutan Kategori Card
       let categories = ["0-HARI | 1A", "LAR 3R", "1-30 | 1B", "31-60 | 2A", "61-90 | 2B", "NPL"];
 
       categories.forEach(cat => {
@@ -1281,7 +1501,6 @@
         let filteredBasedonCat = [];
         let filteredDbCat = validDatabaseAll.filter(r => filterByKolekLogic(r, cat));
 
-        // 1. CARD KOL 1A: Total Beban D dengan G != "3R" DAN E == "0"
         if (upperCat.includes("1A") || upperCat.includes("0-HARI")) {
           filteredDbCat = filteredDbCat.filter(r => String(r.colP || '').toUpperCase().trim() !== "3R");
           filteredBasedonCat = validBasedonAll.filter(r => {
@@ -1290,7 +1509,6 @@
             return colGVal !== "3R" && colEVal === 0;
           });
         } 
-        // 2. CARD KOL 1B: Total Beban D dengan G != "3R" DAN E == 1 SAMPAI 30
         else if (upperCat.includes("1B") || upperCat.includes("1-30")) {
           filteredBasedonCat = validBasedonAll.filter(r => {
             const colEVal = parseFloat(r.colE);
@@ -1298,7 +1516,6 @@
             return colGVal !== "3R" && colEVal >= 1 && colEVal <= 30;
           });
         }
-        // 3. CARD KOL 2A: Total Beban D dengan G != "3R" DAN E == 31 SAMPAI 60
         else if (upperCat.includes("2A") || upperCat.includes("31-60")) {
           filteredBasedonCat = validBasedonAll.filter(r => {
             const colEVal = parseFloat(r.colE);
@@ -1306,7 +1523,6 @@
             return colGVal !== "3R" && colEVal >= 31 && colEVal <= 60;
           });
         }
-        // 4. CARD KOL 2B: Total Beban D dengan G != "3R" DAN E == 61 SAMPAI 90
         else if (upperCat.includes("2B") || upperCat.includes("61-90")) {
           filteredBasedonCat = validBasedonAll.filter(r => {
             const colEVal = parseFloat(r.colE);
@@ -1314,7 +1530,6 @@
             return colGVal !== "3R" && colEVal >= 61 && colEVal <= 90;
           });
         }
-        // 5. CARD NPL: Total Beban D dengan G != "3R" DAN E > 90
         else if (upperCat.includes("NPL")) {
           filteredBasedonCat = validBasedonAll.filter(r => {
             const colEVal = parseFloat(r.colE);
@@ -1322,7 +1537,6 @@
             return colGVal !== "3R" && colEVal > 90;
           });
         }
-        // 6. CARD LAR 3R: Total Beban D dengan G == "3R"
         else if (upperCat.includes("LAR 3R") || upperCat === "3R") {
           filteredDbCat = validDatabaseAll.filter(r => String(r.colP || '').toUpperCase().trim() === "3R");
           filteredBasedonCat = validBasedonAll.filter(r => String(r.colG || '').toUpperCase().trim() === "3R");
@@ -1391,6 +1605,144 @@
         `;
         container.appendChild(card);
       });
+    }
+
+    // ================= MONITORING AGING TAB LOGIC =================
+    function renderAgingTab() {
+      const validAging = rawAging.filter(r => (r.colB && String(r.colB).trim() !== '') || (parseFloat(r.colG) || 0) > 0);
+      const validBasedonAll = rawBasedon.filter(r => (parseFloat(r.colD) || 0) > 0 || (r.colC && String(r.colC).trim() !== ''));
+
+      // Kriteria penyerapan Aging
+      // KOL 1A: I < 1
+      const list1A = validAging.filter(r => r.colI < 1);
+      // KOL 1B: 0 < I < 31 (Kuning)
+      const list1B = validAging.filter(r => r.colI > 0 && r.colI < 31);
+      // KOL 2A: 30 < I < 61 (Merah Muda)
+      const list2A = validAging.filter(r => r.colI > 30 && r.colI < 61);
+      // KOL 2B: 60 < I < 91 (Merah)
+      const list2B = validAging.filter(r => r.colI > 60 && r.colI < 91);
+      // NPL: I > 90 (Hitam)
+      const listNPL = validAging.filter(r => r.colI > 90);
+      // FPD LAR: H < 7 DAN I > 0 (Orange)
+      const listFPD = validAging.filter(r => r.colI > 0 && r.colH < 7);
+
+      // KELOMPOK BARU FPD TOTAL: PARAMETER TAGIHAN KE- < 7 (Semua yang ada di tabel aging dengan Tagihan Ke- < 7)
+      const listFPDTotal = validAging.filter(r => parseFloat(r.colH) < 7);
+
+      // Kriteria Basedon Kol 1B (E >= 1 DAN E <= 30 DAN G != "3R")
+      const list1B_Basedon = validBasedonAll.filter(r => {
+        const colEVal = parseFloat(r.colE);
+        const colGVal = String(r.colG || '').toUpperCase().trim();
+        return colGVal !== "3R" && colEVal >= 1 && colEVal <= 30;
+      });
+
+      // Helper penjelajah nilai OS & NOA
+      const getStats = (arr) => ({
+        noa: arr.length,
+        os: arr.reduce((acc, r) => acc + (parseFloat(r.colG) || 0), 0)
+      });
+
+      const getStatsBasedon = (arr) => ({
+        noa: arr.length,
+        os: arr.reduce((acc, r) => acc + (parseFloat(r.colD) || 0), 0)
+      });
+
+      const s1A = getStats(list1A);
+      const s1B = getStats(list1B);
+      const s1B_Basedon = getStatsBasedon(list1B_Basedon);
+
+      // Perhitungan NEW LAR = (TAB AGING) - (TAB BASED ON)
+      const newLarNoa = Math.max(0, s1B.noa - s1B_Basedon.noa);
+      const newLarOs = Math.max(0, s1B.os - s1B_Basedon.os);
+
+      const s2A = getStats(list2A);
+      const s2B = getStats(list2B);
+      const sNPL = getStats(listNPL);
+      const sFPD = getStats(listFPD);
+      const sFPDTotal = getStats(listFPDTotal);
+
+      document.getElementById('card_aging_1a_noa').innerText = formatNumber(s1A.noa);
+      document.getElementById('card_aging_1a_os').innerText = formatNumber(s1A.os);
+
+      document.getElementById('card_aging_1b_noa').innerText = formatNumber(s1B.noa);
+      document.getElementById('card_aging_1b_os').innerText = formatNumber(s1B.os);
+      document.getElementById('card_aging_1b_new_lar_noa').innerText = formatNumber(newLarNoa);
+      document.getElementById('card_aging_1b_new_lar_os').innerText = formatNumber(newLarOs);
+
+      document.getElementById('card_aging_2a_noa').innerText = formatNumber(s2A.noa);
+      document.getElementById('card_aging_2a_os').innerText = formatNumber(s2A.os);
+
+      document.getElementById('card_aging_2b_noa').innerText = formatNumber(s2B.noa);
+      document.getElementById('card_aging_2b_os').innerText = formatNumber(s2B.os);
+
+      document.getElementById('card_aging_npl_noa').innerText = formatNumber(sNPL.noa);
+      document.getElementById('card_aging_npl_os').innerText = formatNumber(sNPL.os);
+
+      // Card FPD LAR & Total < 7 Tagihan
+      document.getElementById('card_aging_fpd_noa').innerText = formatNumber(sFPD.noa);
+      document.getElementById('card_aging_fpd_os').innerText = formatNumber(sFPD.os);
+      document.getElementById('card_aging_fpd_tot_noa').innerText = formatNumber(sFPDTotal.noa);
+      document.getElementById('card_aging_fpd_tot_os').innerText = formatNumber(sFPDTotal.os);
+
+      document.getElementById('agingRecordCount').innerText = `${validAging.length} Account`;
+
+      // Render Aging Table
+      const tbody = document.getElementById('agingTableBody');
+      tbody.innerHTML = '';
+
+      if (validAging.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="9" class="py-12 text-center text-slate-400">
+              <i class="fa-solid fa-folder-open text-3xl mb-2 text-slate-300"></i>
+              <p class="text-sm font-semibold">Tidak ada data aging yang tersedia.</p>
+            </td>
+          </tr>`;
+        return;
+      }
+
+      validAging.forEach(row => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:opacity-90 transition font-medium border-b border-slate-100';
+
+        const hVal = parseFloat(row.colH) || 0;
+        const iVal = parseFloat(row.colI) || 0;
+
+        // Pewarnaan baris tabel berdasarkan kriteria
+        if (iVal > 0 && hVal < 7) {
+          // FPD: Orange
+          tr.className += ' bg-orange-400 text-white font-bold';
+        } else if (iVal > 90) {
+          // NPL: Hitam
+          tr.className += ' bg-slate-900 text-white font-bold';
+        } else if (iVal > 60 && iVal < 91) {
+          // KOL 2B: Merah
+          tr.className += ' bg-red-600 text-white font-bold';
+        } else if (iVal > 30 && iVal < 61) {
+          // KOL 2A: Merah Muda
+          tr.className += ' bg-rose-200 text-rose-950 font-bold';
+        } else if (iVal > 0 && iVal < 31) {
+          // KOL 1B: Kuning
+          tr.className += ' bg-yellow-300 text-yellow-950 font-bold';
+        } else {
+          tr.className += ' bg-white text-slate-800';
+        }
+
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-mono font-bold whitespace-nowrap">${row.colA || '-'}</td>
+          <td class="py-3 px-4 font-bold whitespace-nowrap">${row.colB || '-'}</td>
+          <td class="py-3 px-4 whitespace-nowrap">${formatDateCustom(row.colC)}</td>
+          <td class="py-3 px-4 text-center whitespace-nowrap">${row.colD || '-'}</td>
+          <td class="py-3 px-4 whitespace-nowrap">${formatDateCustom(row.colE)}</td>
+          <td class="py-3 px-4 text-right whitespace-nowrap font-bold">${formatNumber(row.colF)}</td>
+          <td class="py-3 px-4 text-right whitespace-nowrap font-bold">${formatNumber(row.colG)}</td>
+          <td class="py-3 px-4 text-center whitespace-nowrap font-extrabold">${row.colH ?? '-'}</td>
+          <td class="py-3 px-4 text-center whitespace-nowrap font-extrabold">${row.colI ?? '-'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      setupDoubleScrollAging();
     }
 
     function renderTable() {
@@ -1496,32 +1848,29 @@
       document.getElementById('tabNorek').innerText = row.colB || '-';
       document.getElementById('tabPlafond').innerText = formatNumber(row.colJ);
       document.getElementById('tabOS').innerText = formatNumber(row.colG);
-      document.getElementById('tabBriva').innerText = row.colM || '-';
+      document.getElementById('tabBriva').innerText = row.colM;
 
-      const locContainer = document.getElementById('tabLokasiContainer');
-      if (row.colO) {
-        const mapUrl = String(row.colO).startsWith('http') ? row.colO : `https://maps.google.com/?q=${encodeURIComponent(row.colO)}`;
-        locContainer.innerHTML = `
-          <a href="${mapUrl}" target="_blank" rel="noopener noreferrer" 
-             class="inline-flex items-center gap-1.5 bg-pnm-red hover:bg-pnm-redhover text-white px-3 py-1.5 rounded-md text-xs font-bold transition shadow-sm active:scale-95">
-            <i class="fa-solid fa-location-dot text-white animate-bounce"></i>
-            <span>Buka Maps</span>
-          </a>`;
+      const waLokasi = formatWaLink(row.colO);
+      const tabLokasiContainer = document.getElementById('tabLokasiContainer');
+      if (row.colN && String(row.colN).trim() !== '') {
+        tabLokasiContainer.innerHTML = `
+          <a href="${row.colN}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs text-pnm-cyan hover:underline font-bold">
+            <i class="fa-solid fa-location-dot text-pnm-red"></i> Lihat Alamat
+          </a>
+        `;
       } else {
-        locContainer.innerHTML = `<span class="text-xs text-blue-300 italic font-medium">Tidak ada lokasi</span>`;
+        tabLokasiContainer.innerHTML = `<span class="text-xs text-slate-300 font-semibold">-</span>`;
       }
 
-      const hpContainer = document.getElementById('tabHpContainer');
-      const waLink = formatWaLink(row.colN);
-      if (waLink) {
-        hpContainer.innerHTML = `
-          <a href="${waLink}" target="_blank" rel="noopener noreferrer" 
-             class="inline-flex items-center gap-1.5 bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-md text-xs font-bold transition shadow-sm active:scale-95">
-            <i class="fa-brands fa-whatsapp text-sm"></i>
-            <span>${row.colN}</span>
-          </a>`;
+      const tabHpContainer = document.getElementById('tabHpContainer');
+      if (waLokasi && row.colO) {
+        tabHpContainer.innerHTML = `
+          <a href="${waLokasi}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs text-emerald-400 hover:underline font-bold">
+            <i class="fa-brands fa-whatsapp text-emerald-400"></i> ${row.colO}
+          </a>
+        `;
       } else {
-        hpContainer.innerHTML = `<span class="text-xs text-blue-300 italic font-medium">Tidak ada No HP</span>`;
+        tabHpContainer.innerHTML = `<span class="text-xs text-slate-300 font-semibold">${row.colO || '-'}</span>`;
       }
     }
 
@@ -1531,22 +1880,11 @@
       document.getElementById('tabPlafond').innerText = '0';
       document.getElementById('tabOS').innerText = '0';
       document.getElementById('tabBriva').innerText = '-';
-      document.getElementById('tabLokasiContainer').innerHTML = `<span class="text-xs text-blue-300 italic font-medium">Pilih Nasabah</span>`;
-      document.getElementById('tabHpContainer').innerHTML = `<span class="text-xs text-blue-300 italic font-medium">Pilih Nasabah</span>`;
+      document.getElementById('tabLokasiContainer').innerHTML = `<span class="text-xs text-blue-300 italic font-medium">-- AUTO --</span>`;
+      document.getElementById('tabHpContainer').innerHTML = `<span class="text-xs text-blue-300 italic font-medium">-- AUTO --</span>`;
     }
 
-    document.addEventListener('click', function(e) {
-      const suggestBox = document.getElementById('suggestBox');
-      const inputNasabah = document.getElementById('inputNasabah');
-      if (suggestBox && inputNasabah && !suggestBox.contains(e.target) && e.target !== inputNasabah) {
-        suggestBox.classList.add('hidden');
-      }
-    });
-
-    window.onload = function() {
-      initData();
-      setupDoubleScroll();
-    };
+    document.addEventListener('DOMContentLoaded', initData);
   </script>
 </body>
 </html>
