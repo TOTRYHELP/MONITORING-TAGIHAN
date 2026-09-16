@@ -383,7 +383,7 @@
   <footer class="bg-slate-900 text-slate-400 text-xs py-5 border-t border-slate-800 mt-10">
     <div class="max-w-7xl mx-auto px-4 text-center space-y-1">
       <p class="font-semibold text-slate-300">DASHBOARD PORTOFOLIO • PNM ULaMM UMBULHARJO</p>
-      <p class="text-slate-500">© 2026 TEAM UNIT PNM ULaMM UMBULHARJO. All Rights Reserved.</p>
+      <p class="text-slate-500">© 2026 TEAM UNIT PNM ULaMM UMBULHARJO. PASTI BISA, YAKIN BISA, LET'S DO IT!!!</p>
     </div>
   </footer>
 
@@ -609,9 +609,63 @@
 
       const monthIndex = parseInt(document.getElementById('selectBulanOverview').value) - 1;
       const currentResumeRow = rawResume[monthIndex] || rawResume[0];
+      const prevResumeRow = monthIndex > 0 ? (rawResume[monthIndex - 1] || null) : null;
+      const prevMonthLabel = monthIndex > 0 ? CHART_X_LABELS[monthIndex - 1] : CHART_X_LABELS[0];
 
       const kpiGrid = document.getElementById('overviewKpiGrid');
       kpiGrid.innerHTML = '';
+
+      // Helper untuk kalkulasi versus bulan sebelumnya
+      function getComparison(key, isInverse = false) {
+        if (!prevResumeRow) return { prevVal: 0, prevNoa: 0, diff: 0, pctChange: 0, label: 'STATIS', badgeClass: 'bg-amber-100 text-amber-700' };
+
+        const curItem = currentResumeRow[key] || {};
+        const prevItem = prevResumeRow[key] || {};
+
+        const curVal = curItem.realisasi || 0;
+        const prevVal = prevItem.realisasi || 0;
+        const prevNoa = prevItem.noa || 0;
+
+        const diff = curVal - prevVal;
+        const pctChange = prevVal !== 0 ? (diff / Math.abs(prevVal)) * 100 : (diff > 0 ? 100 : 0);
+
+        let label = 'STATIS';
+        let badgeClass = 'bg-amber-100 text-amber-700';
+
+        if (diff > 0) {
+          if (isInverse) {
+            label = 'PEMBURUKAN';
+            badgeClass = 'bg-red-100 text-pnm-red';
+          } else {
+            label = 'PERBAIKAN';
+            badgeClass = 'bg-emerald-100 text-emerald-700';
+          }
+        } else if (diff < 0) {
+          if (isInverse) {
+            label = 'PERBAIKAN';
+            badgeClass = 'bg-emerald-100 text-emerald-700';
+          } else {
+            label = 'PEMBURUKAN';
+            badgeClass = 'bg-red-100 text-pnm-red';
+          }
+        }
+
+        return { prevVal, prevNoa, diff, pctChange, label, badgeClass };
+      }
+
+      // Helper untuk kalkulasi selisih nominal RKAP vs Realisasi
+      function getRkapDiffHTML(real, rkap, isInverse = false) {
+        const diff = real - rkap;
+        const diffSign = diff >= 0 ? '+' : '';
+        let isGood = isInverse ? (diff <= 0) : (diff >= 0);
+        const colorClass = isGood ? 'text-emerald-600' : 'text-pnm-red';
+        return `
+          <div class="flex justify-between">
+            <span>SELISIH RKAP:</span>
+            <span class="font-bold ${colorClass}">${diffSign}${formatNumber(diff)}</span>
+          </div>
+        `;
+      }
 
       OVERVIEW_KPIS.forEach(kpi => {
         const item = currentResumeRow[kpi.key] || {};
@@ -626,15 +680,23 @@
         if (kpi.key === 'noa') {
           const newNoa = item.newNoa || 0;
           const outNoa = item.outNoa || 0;
+          const comp = getComparison('noa', false);
+          const diffSign = comp.diff >= 0 ? '+' : '';
 
           contentHTML = `
-            <div>
-              <div class="flex items-center justify-between gap-1">
-                <span class="text-[10px] font-black tracking-wider text-slate-400 uppercase truncate">${kpi.label}</span>
+            <div class="text-center flex flex-col items-center justify-center">
+              <div class="flex items-center justify-between w-full mb-1">
+                <span class="text-[10px] font-black tracking-wider text-slate-400 uppercase truncate mx-auto">${kpi.label}</span>
               </div>
-              <h3 class="text-xl sm:text-2xl font-black text-pnm-navy mt-1 truncate">${formatNumber(real)}</h3>
+              <span class="text-[8px] font-extrabold px-1.5 py-0.5 rounded ${comp.badgeClass} mb-1">
+                ${comp.label}
+              </span>
+              <h3 class="text-2xl sm:text-3xl font-black text-pnm-navy my-1 truncate w-full">${formatNumber(real)}</h3>
+              <div class="text-[9px] font-bold text-slate-500 my-0.5">
+                ${prevMonthLabel}: ${formatNumber(comp.prevVal)} (<span class="${comp.diff >= 0 ? 'text-emerald-600' : 'text-pnm-red'}">${diffSign}${formatNumber(comp.diff)}</span>)
+              </div>
             </div>
-            <div class="mt-2 pt-1.5 border-t border-slate-100 flex justify-between text-[9px] font-semibold text-slate-500">
+            <div class="mt-2 pt-1.5 border-t border-slate-100 flex justify-between text-[9px] font-semibold text-slate-500 w-full">
               <div>NEW: <span class="font-bold text-slate-700">${formatNumber(newNoa)}</span></div>
               <div>OUT: <span class="font-bold text-slate-700">${formatNumber(outNoa)}</span></div>
             </div>
@@ -660,54 +722,74 @@
           `;
         } else if (kpi.key === 'lar') {
           const noaAD = item.noa || 0;
-          const pct = rkap > 0 ? (real / rkap) * 100 : 0;
-          const badgeClass = real <= rkap ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-pnm-red';
+          const comp = getComparison('lar', true);
+          const diffSign = comp.diff >= 0 ? '+' : '';
 
           contentHTML = `
             <div>
               <div class="flex items-center justify-between gap-1">
                 <span class="text-[9px] font-black tracking-wider text-slate-400 uppercase truncate">${kpi.label}</span>
-                <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded shrink-0 ${badgeClass}">
-                  ${formatPercent(pct)}
+                <span class="text-[8px] font-extrabold px-1.5 py-0.5 rounded shrink-0 ${comp.badgeClass}">
+                  ${comp.label}
                 </span>
               </div>
               <h3 class="text-base font-black text-pnm-navy mt-1 truncate">${formatNumber(real)}</h3>
+              <div class="mt-1 flex justify-start">
+                <span class="inline-flex items-center bg-blue-100 text-pnm-navy font-black text-[9px] px-2 py-0.5 rounded-md shadow-sm border border-blue-200/50">
+                  ${formatNumber(noaAD)} NOA
+                </span>
+              </div>
             </div>
-            <div class="mt-2 pt-1.5 border-t border-slate-100 space-y-0.5 text-[9px] font-semibold text-slate-500">
+            <div class="mt-2 pt-1.5 border-t border-slate-100 space-y-0.5 text-[8.5px] font-semibold text-slate-500">
+              <div class="flex justify-between">
+                <span>${prevMonthLabel}:</span>
+                <span class="font-bold text-slate-700">${formatNumber(comp.prevVal)} (${formatNumber(comp.prevNoa)})</span>
+              </div>
+              <div class="flex justify-between">
+                <span>SELISIH (%):</span>
+                <span class="font-bold ${comp.diff <= 0 ? 'text-emerald-600' : 'text-pnm-red'}">${diffSign}${formatNumber(comp.diff)} (${formatPercent(comp.pctChange)})</span>
+              </div>
               <div class="flex justify-between">
                 <span>RKAP:</span>
                 <span class="font-bold text-slate-700">${formatNumber(rkap)}</span>
               </div>
-              <div class="flex justify-between text-[8.5px]">
-                <span>NOA:</span>
-                <span class="font-bold text-pnm-navy">${formatNumber(noaAD)}</span>
-              </div>
+              ${getRkapDiffHTML(real, rkap, true)}
             </div>
           `;
         } else if (kpi.key === 'npl') {
           const noaAK = item.noa || 0;
-          const pct = rkap > 0 ? (real / rkap) * 100 : 0;
-          const badgeClass = real <= rkap ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-pnm-red';
+          const comp = getComparison('npl', true);
+          const diffSign = comp.diff >= 0 ? '+' : '';
 
           contentHTML = `
             <div>
               <div class="flex items-center justify-between gap-1">
                 <span class="text-[9px] font-black tracking-wider text-slate-400 uppercase truncate">${kpi.label}</span>
-                <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded shrink-0 ${badgeClass}">
-                  ${formatPercent(pct)}
+                <span class="text-[8px] font-extrabold px-1.5 py-0.5 rounded shrink-0 ${comp.badgeClass}">
+                  ${comp.label}
                 </span>
               </div>
               <h3 class="text-base font-black text-pnm-navy mt-1 truncate">${formatNumber(real)}</h3>
+              <div class="mt-1 flex justify-start">
+                <span class="inline-flex items-center bg-blue-100 text-pnm-navy font-black text-[9px] px-2 py-0.5 rounded-md shadow-sm border border-blue-200/50">
+                  ${formatNumber(noaAK)} NOA
+                </span>
+              </div>
             </div>
-            <div class="mt-2 pt-1.5 border-t border-slate-100 space-y-0.5 text-[9px] font-semibold text-slate-500">
+            <div class="mt-2 pt-1.5 border-t border-slate-100 space-y-0.5 text-[8.5px] font-semibold text-slate-500">
+              <div class="flex justify-between">
+                <span>${prevMonthLabel}:</span>
+                <span class="font-bold text-slate-700">${formatNumber(comp.prevVal)} (${formatNumber(comp.prevNoa)})</span>
+              </div>
+              <div class="flex justify-between">
+                <span>SELISIH (%):</span>
+                <span class="font-bold ${comp.diff <= 0 ? 'text-emerald-600' : 'text-pnm-red'}">${diffSign}${formatNumber(comp.diff)} (${formatPercent(comp.pctChange)})</span>
+              </div>
               <div class="flex justify-between">
                 <span>RKAP:</span>
                 <span class="font-bold text-slate-700">${formatNumber(rkap)}</span>
               </div>
-              <div class="flex justify-between text-[8.5px]">
-                <span>NOA:</span>
-                <span class="font-bold text-pnm-navy">${formatNumber(noaAK)}</span>
-              </div>
+              ${getRkapDiffHTML(real, rkap, true)}
             </div>
           `;
         } else if (kpi.key === 'potensi_npl') {
@@ -731,56 +813,99 @@
             </div>
           `;
         } else if (kpi.key === 'os') {
-          const diff = real - rkap;
-          const pct = rkap > 0 ? (real / rkap) * 100 : 0;
-          const badgeClass = pct >= 100 ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-pnm-red';
-          const diffSign = diff >= 0 ? '+' : '';
+          const comp = getComparison('os', false);
+          const diffSign = comp.diff >= 0 ? '+' : '';
 
           contentHTML = `
             <div>
               <div class="flex items-center justify-between gap-1">
                 <span class="text-[9px] font-black tracking-wider text-slate-400 uppercase truncate">${kpi.label}</span>
-                <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded shrink-0 ${badgeClass}">
-                  ${formatPercent(pct)}
+                <span class="text-[8px] font-extrabold px-1.5 py-0.5 rounded shrink-0 ${comp.badgeClass}">
+                  ${comp.label}
                 </span>
               </div>
               <h3 class="text-base font-black text-pnm-navy mt-1 truncate">${formatNumber(real)}</h3>
             </div>
-            <div class="mt-2 pt-1.5 border-t border-slate-100 space-y-0.5 text-[9px] font-semibold text-slate-500">
+            <div class="mt-2 pt-1.5 border-t border-slate-100 space-y-0.5 text-[8.5px] font-semibold text-slate-500">
+              <div class="flex justify-between">
+                <span>${prevMonthLabel}:</span>
+                <span class="font-bold text-slate-700">${formatNumber(comp.prevVal)}</span>
+              </div>
+              <div class="flex justify-between">
+                <span>SELISIH (%):</span>
+                <span class="font-bold ${comp.diff >= 0 ? 'text-emerald-600' : 'text-pnm-red'}">${diffSign}${formatNumber(comp.diff)} (${formatPercent(comp.pctChange)})</span>
+              </div>
               <div class="flex justify-between">
                 <span>RKAP:</span>
                 <span class="font-bold text-slate-700">${formatNumber(rkap)}</span>
               </div>
-              <div class="flex justify-between text-[8.5px]">
-                <span>SELISIH:</span>
-                <span class="font-bold ${diff >= 0 ? 'text-emerald-600' : 'text-pnm-red'}">${diffSign}${formatNumber(diff)}</span>
-              </div>
+              ${getRkapDiffHTML(real, rkap, false)}
             </div>
           `;
         } else if (kpi.key === 'lending') {
           const noaW = item.noa || 0;
-          const pct = rkap > 0 ? (real / rkap) * 100 : 0;
-          const badgeClass = pct >= 100 ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-pnm-red';
+          const comp = getComparison('lending', false);
+          const diffSign = comp.diff >= 0 ? '+' : '';
 
           contentHTML = `
             <div>
               <div class="flex items-center justify-between gap-1">
                 <span class="text-[9px] font-black tracking-wider text-slate-400 uppercase truncate">${kpi.label}</span>
-                <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded shrink-0 ${badgeClass}">
-                  ${formatPercent(pct)}
+                <span class="text-[8px] font-extrabold px-1.5 py-0.5 rounded shrink-0 ${comp.badgeClass}">
+                  ${comp.label}
                 </span>
               </div>
               <h3 class="text-base font-black text-pnm-navy mt-1 truncate">${formatNumber(real)}</h3>
+              <div class="mt-1 flex justify-start">
+                <span class="inline-flex items-center bg-blue-100 text-pnm-navy font-black text-[9px] px-2 py-0.5 rounded-md shadow-sm border border-blue-200/50">
+                  ${formatNumber(noaW)} NOA
+                </span>
+              </div>
             </div>
-            <div class="mt-2 pt-1.5 border-t border-slate-100 space-y-0.5 text-[9px] font-semibold text-slate-500">
+            <div class="mt-2 pt-1.5 border-t border-slate-100 space-y-0.5 text-[8.5px] font-semibold text-slate-500">
+              <div class="flex justify-between">
+                <span>${prevMonthLabel}:</span>
+                <span class="font-bold text-slate-700">${formatNumber(comp.prevVal)} (${formatNumber(comp.prevNoa)})</span>
+              </div>
+              <div class="flex justify-between">
+                <span>SELISIH (%):</span>
+                <span class="font-bold ${comp.diff >= 0 ? 'text-emerald-600' : 'text-pnm-red'}">${diffSign}${formatNumber(comp.diff)} (${formatPercent(comp.pctChange)})</span>
+              </div>
               <div class="flex justify-between">
                 <span>RKAP:</span>
                 <span class="font-bold text-slate-700">${formatNumber(rkap)}</span>
               </div>
-              <div class="flex justify-between text-[8.5px]">
-                <span>NOA:</span>
-                <span class="font-bold text-pnm-navy">${formatNumber(noaW)}</span>
+              ${getRkapDiffHTML(real, rkap, false)}
+            </div>
+          `;
+        } else if (kpi.key === 'revenue') {
+          const comp = getComparison('revenue', false);
+          const diffSign = comp.diff >= 0 ? '+' : '';
+
+          contentHTML = `
+            <div>
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-[9px] font-black tracking-wider text-slate-400 uppercase truncate">${kpi.label}</span>
+                <span class="text-[8px] font-extrabold px-1.5 py-0.5 rounded shrink-0 ${comp.badgeClass}">
+                  ${comp.label}
+                </span>
               </div>
+              <h3 class="text-base font-black text-pnm-navy mt-1 truncate">${formatNumber(real)}</h3>
+            </div>
+            <div class="mt-2 pt-1.5 border-t border-slate-100 space-y-0.5 text-[8.5px] font-semibold text-slate-500">
+              <div class="flex justify-between">
+                <span>${prevMonthLabel}:</span>
+                <span class="font-bold text-slate-700">${formatNumber(comp.prevVal)}</span>
+              </div>
+              <div class="flex justify-between">
+                <span>SELISIH (%):</span>
+                <span class="font-bold ${comp.diff >= 0 ? 'text-emerald-600' : 'text-pnm-red'}">${diffSign}${formatNumber(comp.diff)} (${formatPercent(comp.pctChange)})</span>
+              </div>
+              <div class="flex justify-between">
+                <span>RKAP:</span>
+                <span class="font-bold text-slate-700">${formatNumber(rkap)}</span>
+              </div>
+              ${getRkapDiffHTML(real, rkap, false)}
             </div>
           `;
         } else if (kpi.key === 'runoff') {
@@ -842,9 +967,12 @@
               </div>
               <h3 class="text-base font-black text-pnm-navy mt-1 truncate">${formatNumber(real)}</h3>
             </div>
-            <div class="mt-2 pt-1.5 border-t border-slate-100 flex justify-between text-[9px] font-semibold text-slate-500">
-              <span>RKAP:</span>
-              <span class="font-bold text-slate-700">${formatNumber(rkap)}</span>
+            <div class="mt-2 pt-1.5 border-t border-slate-100 space-y-0.5 text-[9px] font-semibold text-slate-500">
+              <div class="flex justify-between">
+                <span>RKAP:</span>
+                <span class="font-bold text-slate-700">${formatNumber(rkap)}</span>
+              </div>
+              ${getRkapDiffHTML(real, rkap, false)}
             </div>
           `;
         }
